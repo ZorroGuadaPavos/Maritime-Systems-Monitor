@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "vessel-connections"
+version = "0.1.0"
+description = ""
+authors = ["mdebeurs <marc@yabbadatadoo.io>"]
+readme = "README.md"
+packages = [{include = "vessel_connections"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.1.1"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.5.0"
+pytest-cov = "^4.1.0"
+ruff = "^0.0.284"
+black = "^23.7.0"
+invoke = "^2.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
