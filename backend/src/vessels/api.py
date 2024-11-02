@@ -1,3 +1,4 @@
+import uuid
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -10,7 +11,7 @@ router = APIRouter()
 
 
 @router.get('/{vessel_id}', response_model=VesselPublic)
-def read_vessel(session: SessionDep, current_user: CurrentUser, vessel_id: int) -> Any:
+def read_vessel(session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID) -> Any:
     """
     Get vessel.
     """
@@ -30,7 +31,9 @@ def read_vessels(session: SessionDep, current_user: CurrentUser, skip: int = 0, 
 
 
 @router.get('/{vessel_id}/valves', response_model=ValveListPublic)
-def read_valves(session: SessionDep, current_user: CurrentUser, vessel_id: int, skip: int = 0, limit: int = 100) -> Any:
+def read_valves(
+    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, skip: int = 0, limit: int = 100
+) -> Any:
     """
     Get valves of a vessel.
     """
@@ -40,7 +43,7 @@ def read_valves(session: SessionDep, current_user: CurrentUser, vessel_id: int, 
 
 @router.put('/{vessel_id}/valves/{valve_identifier}', response_model=ValvePublic)
 def update_valve(
-    session: SessionDep, current_user: CurrentUser, vessel_id: int, valve_identifier: str, is_open: bool
+    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, valve_identifier: str, is_open: bool
 ) -> Any:
     """
     Update valve of a vessel.
@@ -56,7 +59,7 @@ def update_valve(
 
 @router.get('/{vessel_id}/connected-equipment/{equipment_identifer}', response_model=list[str])
 def flow_connected_equipment(
-    session: SessionDep, current_user: CurrentUser, vessel_id: int, equipment_identifer: str
+    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, equipment_identifer: str
 ) -> Any:
     """
     Get connected equipment.

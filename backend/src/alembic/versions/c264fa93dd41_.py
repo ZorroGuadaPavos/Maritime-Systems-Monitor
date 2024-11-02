@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5874d97c5e99
+Revision ID: c264fa93dd41
 Revises: 
-Create Date: 2024-11-02 16:57:00.763364
+Create Date: 2024-11-02 23:48:31.415535
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision = '5874d97c5e99'
+revision = 'c264fa93dd41'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,7 +31,7 @@ def upgrade():
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_table('vessel',
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(length=30), nullable=False),
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('equipment_connections', sa.JSON(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -48,8 +48,8 @@ def upgrade():
     op.create_table('valve',
     sa.Column('is_open', sa.Boolean(), nullable=False),
     sa.Column('identifier', sqlmodel.sql.sqltypes.AutoString(length=10), nullable=False),
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('vessel_id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('vessel_id', sa.Uuid(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['vessel_id'], ['vessel.id'], ),
     sa.PrimaryKeyConstraint('id')

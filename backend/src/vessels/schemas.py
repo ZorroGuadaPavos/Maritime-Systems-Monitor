@@ -1,3 +1,4 @@
+import uuid
 from typing import Optional
 
 from sqlmodel import Field, SQLModel
@@ -8,7 +9,7 @@ class VesselBase(SQLModel):
 
 
 class VesselList(VesselBase):
-    id: int
+    id: uuid.UUID
 
 
 class VesselListPublic(SQLModel):
@@ -22,7 +23,7 @@ class ValveBase(SQLModel):
 
 
 class VesselPublic(VesselBase):
-    id: int
+    id: uuid.UUID
 
 
 class ValvePublic(ValveBase):

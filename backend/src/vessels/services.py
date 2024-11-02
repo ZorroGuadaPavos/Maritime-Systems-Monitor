@@ -1,4 +1,4 @@
-from sqlmodel import Session, func, select
+from sqlmodel import Session, delete, func, select
 
 from src.vessels.models import Valve, Vessel
 from src.vessels.schemas import VesselCreate, VesselUpdate
@@ -44,14 +44,11 @@ def create_or_update_vessel(*, session: Session, name: str, equipment_connection
 
 
 def update_vessel_valves(*, session: Session, vessel: Vessel, valves: list) -> Vessel:
-    valve_objects = []
-    for identifier in valves:
-        valve_obj = Valve(identifier=identifier, vessel_id=vessel.id)
-        valve_objects.append(valve_obj)
-    vessel.valves = valve_objects
-    session.add(vessel)
+    statement = delete(Valve).where(Valve.vessel_id == vessel.id)
+    session.exec(statement)
+    valve_objects = [Valve(identifier=identifier, vessel_id=vessel.id) for identifier in valves]
+    session.bulk_save_objects(valve_objects)
     session.commit()
-    session.refresh(vessel)
     return vessel
 
 
@@ -99,8 +96,6 @@ def get_connected_equipment(session: Session, vessel: Vessel, start: str) -> set
     """
     Returns all pieces of equipment connected to 'start' through open valves.
     """
-    # valve_identifiers = [valve.identifier for valve in valves]
-    # open_valves = [valve.identifier for valve in vessel.valves if valve.is_open]
     valve_identifiers = get_valve_identifiers(session=session, vessel_id=vessel.id)
     open_valves = get_open_valves(session=session, vessel_id=vessel.id)
 

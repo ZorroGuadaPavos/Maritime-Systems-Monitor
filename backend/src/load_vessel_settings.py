@@ -18,7 +18,7 @@ def load_ballasting_system_from_yaml(yaml_file_path):
     return BallastingSystem(config_data)
 
 
-def init_db(ballasting_system: BallastingSystem)
+def init_db(ballasting_system: BallastingSystem):
     with Session(engine) as session:
         vessel = create_or_update_vessel(
             session=session, name=ballasting_system.name, equipment_connections=ballasting_system.graph
