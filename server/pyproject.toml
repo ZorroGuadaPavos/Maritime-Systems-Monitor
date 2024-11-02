@@ -21,3 +21,9 @@ invoke = "^2.2.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+exclude = ["alembic"]
+line-length = 120
+[tool.ruff.format]
+quote-style = "single"
