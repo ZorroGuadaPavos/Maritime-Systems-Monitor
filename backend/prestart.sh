@@ -9,3 +9,4 @@ alembic upgrade head
 
 # # Create initial data in DB
 python src/initial_data.py
+python src/load_vessel_settings.py

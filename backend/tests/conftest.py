@@ -6,7 +6,6 @@ from sqlmodel import Session, delete
 
 from src.core.config import settings
 from src.core.db import engine, init_db
-from src.items.models import Item
 from src.main import app
 from src.users.models import User
 from tests.utils.user import authentication_token_from_email
@@ -18,8 +17,6 @@ def db() -> Generator[Session, None, None]:
     with Session(engine) as session:
         init_db(session)
         yield session
-        statement = delete(Item)
-        session.execute(statement)
         statement = delete(User)
         session.execute(statement)
         session.commit()
