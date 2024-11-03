@@ -1,9 +1,10 @@
-import { Switch, Select, Flex, Divider, Box, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { VesselsService, VesselPublic } from "../../../client/index.ts";
+import { ValvesList } from "../../../components/Vessel/ValvesList.tsx";
+import { EquipmentSelect } from "../../../components/Vessel/EquipmentSelect.tsx";
 
-// Types
 interface VesselState {
   vessel: VesselPublic | null;
   loading: boolean;
@@ -17,123 +18,14 @@ interface EquipmentState {
   error: string | null;
 }
 
-const EQUIPMENT_CATEGORIES = {
-  Pipes: (id: string) => id.startsWith("PI"),
-  Tanks: (id: string) => id.startsWith("TA"),
-  Pumps: (id: string) => id.startsWith("PU"),
-  Sea: (id: string) => !id.startsWith("PI") && !id.startsWith("TA") && !id.startsWith("PU"),
-} as const;
-
-// Components
-interface ValvesListProps {
-  valves: VesselPublic['valves'];
-  onToggleValve: (identifier: string, isOpen: boolean) => Promise<void>;
-}
-
-const ValvesList = ({ valves, onToggleValve }: ValvesListProps) => (
-  <ul>
-    {valves
-      .sort((a, b) => a.identifier.localeCompare(b.identifier))
-      .map((valve) => (
-        <li key={valve.identifier}>
-          <span>{valve.identifier}</span>
-          <Switch
-            value={valve.identifier}
-            isChecked={valve.is_open}
-            onChange={(e) => onToggleValve(valve.identifier, e.target.checked)}
-          />
-        </li>
-      ))}
-  </ul>
-);
-
-interface EquipmentCategoryProps {
-  category: string;
-  identifiers: string[];
-}
-
-const EquipmentCategory = ({ category, identifiers }: EquipmentCategoryProps) => (
-  <Box>
-    <Text fontWeight="bold">{category}:</Text>
-    <Divider />
-    {identifiers
-      .sort((a, b) => a.localeCompare(b))
-      .map((identifier) => (
-        <span key={identifier}>{identifier}, </span>
-      ))}
-  </Box>
-);
-
-export const Route = createFileRoute("/_layout/vessels/$vesselId")({
-  component: VesselDetail,
-});
-
-function VesselDetail() {
-  const { vesselId } = useParams<{ vesselId: string }>();
-  
-  const [vesselState, setVesselState] = useState<VesselState>({
+const useVessel = (vesselId: string) => {
+  const [state, setState] = useState<VesselState>({
     vessel: null,
     loading: true,
     error: null
   });
-  
-  const [equipmentState, setEquipmentState] = useState<EquipmentState>({
-    selected: null,
-    identifiers: [],
-    loading: false,
-    error: null
-  });
 
-  const getVessel = async (id: string) => {
-    try {
-      const response = await VesselsService.readVessel({ vesselId: id });
-      setVesselState({
-        vessel: response,
-        loading: false,
-        error: null
-      });
-    } catch (err) {
-      setVesselState(prev => ({
-        ...prev,
-        loading: false,
-        error: err instanceof Error ? err.message : 'Unknown error'
-      }));
-    }
-  };
-
-  const getVesselEquipment = async (
-    id: string,
-    equipmentId: string | null
-  ): Promise<string[] | null> => {
-    if (!equipmentId) return null;
-
-    setEquipmentState(prev => ({ ...prev, loading: true }));
-    
-    try {
-      const response = await VesselsService.fetchConnectedEquipment({
-        vesselId: id,
-        equipmentIdentifier: equipmentId
-      });
-      
-      setEquipmentState(prev => ({
-        ...prev,
-        identifiers: response,
-        loading: false,
-        error: null
-      }));
-      
-      return response;
-    } catch (err) {
-      setEquipmentState(prev => ({
-        ...prev,
-        loading: false,
-        error: err instanceof Error ? err.message : 'Unknown error'
-      }));
-      return null;
-    }
-  };
-
-  const handleToggle = async (valveIdentifier: string, isOpen: boolean) => {
+  const updateValve = async (valveIdentifier: string, isOpen: boolean) => {
     try {
       const updatedValve = await VesselsService.updateValve({
         vesselId,
@@ -141,7 +33,7 @@ function VesselDetail() {
         requestBody: { is_open: isOpen },
       });
       
-      setVesselState(prev => ({
+      setState(prev => ({
         ...prev,
         vessel: prev.vessel ? {
           ...prev.vessel,
@@ -150,9 +42,8 @@ function VesselDetail() {
           ),
         } : null
       }));
-      
     } catch (err) {
-      setVesselState(prev => ({
+      setState(prev => ({
         ...prev,
         error: err instanceof Error ? err.message : 'Unknown error'
       }));
@@ -160,18 +51,99 @@ function VesselDetail() {
   };
 
   useEffect(() => {
-    getVessel(vesselId);
+    const fetchVessel = async () => {
+      try {
+        const response = await VesselsService.readVessel({ vesselId });
+        setState({
+          vessel: response,
+          loading: false,
+          error: null
+        });
+      } catch (err) {
+        setState(prev => ({
+          ...prev,
+          loading: false,
+          error: err instanceof Error ? err.message : 'Unknown error'
+        }));
+      }
+    };
+
+    fetchVessel();
   }, [vesselId]);
 
-  useEffect(() => {
-    if (equipmentState.selected) {
-      getVesselEquipment(vesselId, equipmentState.selected);
+  return { state, updateValve };
+};
+
+const useEquipment = (vesselId: string) => {
+  const [state, setState] = useState<EquipmentState>({
+    selected: null,
+    identifiers: [],
+    loading: false,
+    error: null
+  });
+
+  const fetchEquipment = async (equipmentId: string | null) => {
+    if (!equipmentId) return null;
+
+    setState(prev => ({ ...prev, loading: true }));
+    
+    try {
+      const response = await VesselsService.fetchConnectedEquipment({
+        vesselId,
+        equipmentIdentifier: equipmentId
+      });
+      
+      setState(prev => ({
+        ...prev,
+        identifiers: response,
+        loading: false,
+        error: null
+      }));
+      
+      return response;
+    } catch (err) {
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: err instanceof Error ? err.message : 'Unknown error'
+      }));
+      return null;
     }
-  }, [equipmentState.selected, vesselId]);
+  };
+
+  const selectEquipment = (value: string | null) => {
+    setState(prev => ({
+      ...prev,
+      selected: value
+    }));
+  };
+
+  useEffect(() => {
+    if (state.selected) {
+      fetchEquipment(state.selected);
+    }
+  }, [state.selected, vesselId]);
+
+  return { state, selectEquipment, fetchEquipment };
+};
+
+// Component
+function VesselDetail() {
+  const { vesselId } = useParams<{ vesselId: string }>();
+  
+  const { state: vesselState, updateValve } = useVessel(vesselId!);
+  const { state: equipmentState, selectEquipment, fetchEquipment } = useEquipment(vesselId);
 
   if (vesselState.loading) return <div>Loading...</div>;
   if (vesselState.error) return <div>Error: {vesselState.error}</div>;
   if (!vesselState.vessel) return <div>No vessel found</div>;
+
+  const handleValveToggle = async (identifier: string, isOpen: boolean) => {
+    await updateValve(identifier, isOpen);
+    if (equipmentState.selected) {
+      fetchEquipment(equipmentState.selected);
+    }
+  };
 
   return (
     <div>
@@ -182,41 +154,19 @@ function VesselDetail() {
       <Flex gap="4" direction="row" justify="space-between" w="50vw">
         <ValvesList 
           valves={vesselState.vessel.valves}
-          onToggleValve={async (identifier, isOpen) => {
-            await handleToggle(identifier, isOpen);
-            if (equipmentState.selected) {
-              getVesselEquipment(vesselId, equipmentState.selected);
-            }
-          }}
+          onToggleValve={handleValveToggle}
         />
-        <Box maxW="560px" minW="560px">
-          <Select
-            placeholder="Select equipment identifier"
-            value={equipmentState.selected || ""}
-            onChange={({ target }) => {
-              setEquipmentState(prev => ({
-                ...prev,
-                selected: target.value
-              }));
-            }}
-          >
-            {vesselState.vessel.equipment_identifiers.map((identifier) => (
-              <option key={identifier} value={identifier}>
-                {identifier}
-              </option>
-            ))}
-          </Select>
-          <Flex direction="column">
-            {Object.entries(EQUIPMENT_CATEGORIES).map(([category, filterFn]) => (
-              <EquipmentCategory
-                key={category}
-                category={category}
-                identifiers={equipmentState.identifiers.filter(filterFn)}
-              />
-            ))}
-          </Flex>
-        </Box>
+        <EquipmentSelect
+          equipmentIdentifiers={vesselState.vessel.equipment_identifiers}
+          selectedEquipment={equipmentState.selected}
+          connectedEquipment={equipmentState.identifiers}
+          onEquipmentSelect={selectEquipment}
+        />
       </Flex>
     </div>
   );
 }
+
+export const Route = createFileRoute("/_layout/vessels/$vesselId")({
+  component: VesselDetail,
+});
