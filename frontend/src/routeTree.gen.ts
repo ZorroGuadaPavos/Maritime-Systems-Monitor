@@ -15,6 +15,7 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as LayoutVesselsImport } from './routes/_layout/vessels'
 
 // Create/Update Routes
 
@@ -38,6 +39,11 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutVesselsRoute = LayoutVesselsImport.update({
+  path: '/vessels',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -54,6 +60,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/_layout/vessels': {
+      preLoaderRoute: typeof LayoutVesselsImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
@@ -64,7 +74,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  LayoutRoute.addChildren([LayoutIndexRoute]),
+  LayoutRoute.addChildren([LayoutVesselsRoute, LayoutIndexRoute]),
   LoginRoute,
   SignupRoute,
 ])

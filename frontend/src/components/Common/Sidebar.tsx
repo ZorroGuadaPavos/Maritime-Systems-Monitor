@@ -18,6 +18,8 @@ import { FiLogOut, FiMenu } from "react-icons/fi"
 import Logo from "/assets/images/ship-logo.svg"
 import type { UserPublic } from "../../client"
 import useAuth from "../../hooks/useAuth"
+import SidebarVessels from "./SidebarVessels"
+
 
 const Sidebar = () => {
   const queryClient = useQueryClient()
@@ -52,6 +54,7 @@ const Sidebar = () => {
             <Flex flexDir="column" justify="space-between">
               <Box>
                 <Image src={Logo} alt="logo" p={6} />
+                <SidebarVessels onClose={onClose} />
                 <Flex
                   as="button"
                   onClick={handleLogout}
@@ -92,6 +95,7 @@ const Sidebar = () => {
         >
           <Box>
             <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+            <SidebarVessels />
           </Box>
           {currentUser?.email && (
             <Text

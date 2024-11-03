@@ -18,8 +18,8 @@ def get_vessel(session: Session, id: int) -> Vessel | None:
     return session.get(Vessel, id)
 
 
-def get_vessel_by_name(*, session: Session, name: str) -> Vessel | None:
-    statement = select(Vessel).where(Vessel.name == name)
+def get_vessel_by_name_version(*, session: Session, name: str, version: str) -> Vessel | None:
+    statement = select(Vessel).where(Vessel.name == name, Vessel.version == version)
     vessel = session.exec(statement).first()
     return vessel
 
@@ -32,13 +32,13 @@ def create_vessel(*, session: Session, vessel_in: VesselCreate) -> Vessel:
     return db_obj
 
 
-def create_or_update_vessel(*, session: Session, name: str, equipment_connections: dict) -> Vessel:
-    vessel = get_vessel_by_name(session=session, name=name)
+def create_or_update_vessel(*, session: Session, name: str, version: str, equipment_connections: dict) -> Vessel:
+    vessel = get_vessel_by_name_version(session=session, name=name, version=version)
     if vessel:
         vessel_in = VesselUpdate(equipment_connections=equipment_connections)
         vessel = update_vessel(session=session, vessel=vessel, vessel_in=vessel_in)
     else:
-        vessel_in = VesselCreate(name=name, equipment_connections=equipment_connections)
+        vessel_in = VesselCreate(name=name, version=version, equipment_connections=equipment_connections)
         vessel = create_vessel(session=session, vessel_in=vessel_in)
     return vessel
 

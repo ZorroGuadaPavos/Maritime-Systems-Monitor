@@ -5,7 +5,8 @@ from sqlmodel import Field, SQLModel
 
 
 class VesselBase(SQLModel):
-    name: str = Field(unique=True, index=True, max_length=30)
+    version: str
+    name: str = Field(index=True, max_length=30)
 
 
 class VesselList(VesselBase):

@@ -7,6 +7,7 @@ class BallastingSystem:
         Initialize the ballasting system with the parsed YAML config data
         """
         self.name = config_data.get('vessel', 'Vessel')
+        self.version = config_data.get('version', '0.0.1')
         self.tanks = self._process_components(config_data.get('tanks', {}), 'T')
         self.pipes = self._process_components(config_data.get('pipes', {}), 'PI')
         self.pumps = self._process_components(config_data.get('pumps', {}), 'PU')

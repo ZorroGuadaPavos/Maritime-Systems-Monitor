@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8da7b4d1985a
+Revision ID: 64633c613fec
 Revises: 
-Create Date: 2024-11-03 00:38:48.820299
+Create Date: 2024-11-03 15:28:12.294753
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision = '8da7b4d1985a'
+revision = '64633c613fec'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,13 +30,14 @@ def upgrade():
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_table('vessel',
+    sa.Column('version', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(length=30), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('equipment_connections', sa.JSON(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_vessel_name'), 'vessel', ['name'], unique=True)
+    op.create_index(op.f('ix_vessel_name'), 'vessel', ['name'], unique=False)
     op.create_table('valve',
     sa.Column('is_open', sa.Boolean(), nullable=False),
     sa.Column('identifier', sqlmodel.sql.sqltypes.AutoString(length=10), nullable=False),

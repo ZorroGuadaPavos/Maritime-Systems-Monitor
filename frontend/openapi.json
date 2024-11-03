@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FastAPI Project",
+    "title": "Vessel Connections",
     "version": "0.1.0"
   },
   "paths": {
@@ -664,6 +664,10 @@
       },
       "VesselList": {
         "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
           "name": {
             "type": "string",
             "maxLength": 30,
@@ -677,6 +681,7 @@
         },
         "type": "object",
         "required": [
+          "version",
           "name",
           "id"
         ],
@@ -705,6 +710,10 @@
       },
       "VesselPublic": {
         "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
           "name": {
             "type": "string",
             "maxLength": 30,
@@ -718,6 +727,7 @@
         },
         "type": "object",
         "required": [
+          "version",
           "name",
           "id"
         ],

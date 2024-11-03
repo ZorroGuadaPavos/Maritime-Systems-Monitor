@@ -1,6 +1,6 @@
 ---
 vessel: test_vessel
-version: 0.0.1
+version: 0.0.2
 
 tanks:
   "001": [ "001" ]
