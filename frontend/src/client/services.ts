@@ -2,7 +2,7 @@ import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 
-import type { Body_login_login_access_token,Token,UserPublic,UserRegister,ValveListPublic,ValvePublic,VesselListPublic,VesselPublic } from './models';
+import type { Body_login_login_access_token,Token,UserPublic,UserRegister,ValveListPublic,ValvePublic,ValveUpdate,VesselListPublic,VesselPublic } from './models';
 
 export type LoginData = {
         LoginAccessToken: {
@@ -35,7 +35,7 @@ vesselId: string
                     
                 };
 UpdateValve: {
-                    isOpen: boolean
+                    requestBody: ValveUpdate
 valveIdentifier: string
 vesselId: string
                     
@@ -193,7 +193,7 @@ limit = 100,
 		const {
 vesselId,
 valveIdentifier,
-isOpen,
+requestBody,
 } = data;
 		return __request(OpenAPI, {
 			method: 'PUT',
@@ -201,9 +201,8 @@ isOpen,
 			path: {
 				vessel_id: vesselId, valve_identifier: valveIdentifier
 			},
-			query: {
-				is_open: isOpen
-			},
+			body: requestBody,
+			mediaType: 'application/json',
 			errors: {
 				422: `Validation Error`,
 			},

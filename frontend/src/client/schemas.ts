@@ -178,6 +178,15 @@ export const $ValvePublic = {
 	},
 } as const;
 
+export const $ValveUpdate = {
+	properties: {
+		is_open: {
+	type: 'boolean',
+	isRequired: true,
+},
+	},
+} as const;
+
 export const $VesselList = {
 	properties: {
 		version: {

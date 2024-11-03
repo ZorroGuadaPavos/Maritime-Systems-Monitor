@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 
 from src.auth.services import CurrentUser, SessionDep
 from src.vessels import services
-from src.vessels.schemas import ValveListPublic, ValvePublic, VesselListPublic, VesselPublic
+from src.vessels.schemas import ValveListPublic, ValvePublic, ValveUpdate, VesselListPublic, VesselPublic
 
 router = APIRouter()
 
@@ -43,14 +43,14 @@ def read_valves(
 
 @router.put('/{vessel_id}/valves/{valve_identifier}', response_model=ValvePublic)
 def update_valve(
-    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, valve_identifier: str, is_open: bool
+    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, valve_identifier: str, valve_in: ValveUpdate
 ) -> Any:
     """
     Update valve of a vessel.
     """
     try:
         valve = services.update_valve(
-            session=session, vessel_id=vessel_id, valve_identifier=valve_identifier, is_open=is_open
+            session=session, vessel_id=vessel_id, valve_identifier=valve_identifier, is_open=valve_in.is_open
         )
     except services.ValveNotFoundException:
         raise HTTPException(status_code=404, detail='Valve not found')

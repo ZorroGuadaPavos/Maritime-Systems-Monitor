@@ -324,17 +324,18 @@
               "type": "string",
               "title": "Valve Identifier"
             }
-          },
-          {
-            "name": "is_open",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean",
-              "title": "Is Open"
-            }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValveUpdate"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -661,6 +662,19 @@
           "identifier"
         ],
         "title": "ValvePublic"
+      },
+      "ValveUpdate": {
+        "properties": {
+          "is_open": {
+            "type": "boolean",
+            "title": "Is Open"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_open"
+        ],
+        "title": "ValveUpdate"
       },
       "VesselList": {
         "properties": {

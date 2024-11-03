@@ -62,6 +62,12 @@ export type ValvePublic = {
 
 
 
+export type ValveUpdate = {
+	is_open: boolean;
+};
+
+
+
 export type VesselList = {
 	version: string;
 	name: string;
