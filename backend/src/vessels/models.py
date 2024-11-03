@@ -9,6 +9,7 @@ from src.vessels.schemas import ValveBase, VesselBase
 class Vessel(VesselBase, table=True):
     id: uuid.UUID | None = Field(default_factory=uuid.uuid4, primary_key=True)
     valves: list['Valve'] = Relationship(back_populates='vessel')
+    equipment_identifiers: list[str] = Field(sa_type=JSON, default=[])
     equipment_connections: dict = Field(sa_type=JSON, default={})
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

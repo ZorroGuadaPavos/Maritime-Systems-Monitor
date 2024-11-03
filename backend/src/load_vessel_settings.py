@@ -25,6 +25,7 @@ def init_db(ballasting_system: BallastingSystem):
             name=ballasting_system.name,
             version=ballasting_system.version,
             equipment_connections=ballasting_system.graph,
+            equipment_identifiers=ballasting_system.equipment_identifiers,
         )
         update_vessel_valves(session=session, vessel=vessel, valves=ballasting_system.valve_states)
 

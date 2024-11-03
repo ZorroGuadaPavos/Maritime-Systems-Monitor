@@ -6,9 +6,10 @@ class BallastingSystem:
         """
         Initialize the ballasting system with the parsed YAML config data
         """
+        self.equipment_identifiers = []
         self.name = config_data.get('vessel', 'Vessel')
         self.version = config_data.get('version', '0.0.1')
-        self.tanks = self._process_components(config_data.get('tanks', {}), 'T')
+        self.tanks = self._process_components(config_data.get('tanks', {}), 'TA')
         self.pipes = self._process_components(config_data.get('pipes', {}), 'PI')
         self.pumps = self._process_components(config_data.get('pumps', {}), 'PU')
         self.sea = self._process_components(config_data.get('sea', {}), '')
@@ -22,7 +23,9 @@ class BallastingSystem:
         """
         Transform the components dictionary into a dictionary with prefixed component IDs
         """
-        return {f'{prefix}{cid}': [f'VA{vid}' for vid in valves] for cid, valves in components.items()}
+        result = {f'{prefix}{cid}': [f'VA{vid}' for vid in valves] for cid, valves in components.items()}
+        self.equipment_identifiers.extend(result.keys())
+        return result
 
     def _build_graph(self):
         """

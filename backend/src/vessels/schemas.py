@@ -26,6 +26,7 @@ class ValveBase(SQLModel):
 class VesselPublic(VesselBase):
     id: uuid.UUID
     valves: list['ValvePublic']
+    equipment_identifiers: list[str]
 
 
 class ValvePublic(ValveBase):
@@ -43,8 +44,10 @@ class ValveUpdate(SQLModel):
 
 class VesselCreate(VesselBase):
     equipment_connections: dict
+    equipment_identifiers: list[str]
 
 
 class VesselUpdate(SQLModel):
     name: Optional[str] = None
     equipment_connections: dict
+    equipment_identifiers: list[str]

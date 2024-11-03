@@ -32,13 +32,22 @@ def create_vessel(*, session: Session, vessel_in: VesselCreate) -> Vessel:
     return db_obj
 
 
-def create_or_update_vessel(*, session: Session, name: str, version: str, equipment_connections: dict) -> Vessel:
+def create_or_update_vessel(
+    *, session: Session, name: str, version: str, equipment_connections: dict, equipment_identifiers: list[str]
+) -> Vessel:
     vessel = get_vessel_by_name_version(session=session, name=name, version=version)
     if vessel:
-        vessel_in = VesselUpdate(equipment_connections=equipment_connections)
+        vessel_in = VesselUpdate(
+            equipment_connections=equipment_connections, equipment_identifiers=equipment_identifiers
+        )
         vessel = update_vessel(session=session, vessel=vessel, vessel_in=vessel_in)
     else:
-        vessel_in = VesselCreate(name=name, version=version, equipment_connections=equipment_connections)
+        vessel_in = VesselCreate(
+            name=name,
+            version=version,
+            equipment_connections=equipment_connections,
+            equipment_identifiers=equipment_identifiers,
+        )
         vessel = create_vessel(session=session, vessel_in=vessel_in)
     return vessel
 

@@ -360,14 +360,14 @@
         }
       }
     },
-    "/api/v1/vessels/{vessel_id}/connected-equipment/{equipment_identifer}": {
+    "/api/v1/vessels/{vessel_id}/connected-equipment/{equipment_identifier}": {
       "get": {
         "tags": [
           "vessels"
         ],
-        "summary": "Flow Connected Equipment",
+        "summary": "Fetch Connected Equipment",
         "description": "Get connected equipment.",
-        "operationId": "flow_connected_equipment",
+        "operationId": "fetch_connected_equipment",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -385,12 +385,12 @@
             }
           },
           {
-            "name": "equipment_identifer",
+            "name": "equipment_identifier",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Equipment Identifer"
+              "title": "Equipment Identifier"
             }
           }
         ],
@@ -404,7 +404,7 @@
                   "items": {
                     "type": "string"
                   },
-                  "title": "Response Vessels-Flow Connected Equipment"
+                  "title": "Response Vessels-Fetch Connected Equipment"
                 }
               }
             }
@@ -744,6 +744,13 @@
             },
             "type": "array",
             "title": "Valves"
+          },
+          "equipment_identifiers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Equipment Identifiers"
           }
         },
         "type": "object",
@@ -751,7 +758,8 @@
           "version",
           "name",
           "id",
-          "valves"
+          "valves",
+          "equipment_identifiers"
         ],
         "title": "VesselPublic"
       }

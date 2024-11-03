@@ -40,8 +40,8 @@ valveIdentifier: string
 vesselId: string
                     
                 };
-FlowConnectedEquipment: {
-                    equipmentIdentifer: string
+FetchConnectedEquipment: {
+                    equipmentIdentifier: string
 vesselId: string
                     
                 };
@@ -210,21 +210,21 @@ requestBody,
 	}
 
 	/**
-	 * Flow Connected Equipment
+	 * Fetch Connected Equipment
 	 * Get connected equipment.
 	 * @returns string Successful Response
 	 * @throws ApiError
 	 */
-	public static flowConnectedEquipment(data: VesselsData['FlowConnectedEquipment']): CancelablePromise<Array<string>> {
+	public static fetchConnectedEquipment(data: VesselsData['FetchConnectedEquipment']): CancelablePromise<Array<string>> {
 		const {
 vesselId,
-equipmentIdentifer,
+equipmentIdentifier,
 } = data;
 		return __request(OpenAPI, {
 			method: 'GET',
-			url: '/api/v1/vessels/{vessel_id}/connected-equipment/{equipment_identifer}',
+			url: '/api/v1/vessels/{vessel_id}/connected-equipment/{equipment_identifier}',
 			path: {
-				vessel_id: vesselId, equipment_identifer: equipmentIdentifer
+				vessel_id: vesselId, equipment_identifier: equipmentIdentifier
 			},
 			errors: {
 				422: `Validation Error`,

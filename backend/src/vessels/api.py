@@ -57,9 +57,9 @@ def update_valve(
     return valve
 
 
-@router.get('/{vessel_id}/connected-equipment/{equipment_identifer}', response_model=list[str])
-def flow_connected_equipment(
-    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, equipment_identifer: str
+@router.get('/{vessel_id}/connected-equipment/{equipment_identifier}', response_model=list[str])
+def fetch_connected_equipment(
+    session: SessionDep, current_user: CurrentUser, vessel_id: uuid.UUID, equipment_identifier: str
 ) -> Any:
     """
     Get connected equipment.
@@ -67,4 +67,4 @@ def flow_connected_equipment(
     vessel = services.get_vessel(session=session, id=vessel_id)
     if not vessel:
         raise HTTPException(status_code=404, detail='Vessel not found')
-    return services.get_connected_equipment(session=session, vessel=vessel, start=equipment_identifer)
+    return services.get_connected_equipment(session=session, vessel=vessel, start=equipment_identifier)

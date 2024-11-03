@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 64633c613fec
+Revision ID: 418ef023bba8
 Revises: 
-Create Date: 2024-11-03 15:28:12.294753
+Create Date: 2024-11-03 20:45:34.872042
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision = '64633c613fec'
+revision = '418ef023bba8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,6 +33,7 @@ def upgrade():
     sa.Column('version', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(length=30), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('equipment_identifiers', sa.JSON(), nullable=False),
     sa.Column('equipment_connections', sa.JSON(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')

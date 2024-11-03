@@ -245,5 +245,12 @@ export const $VesselPublic = {
 	},
 	isRequired: true,
 },
+		equipment_identifiers: {
+	type: 'array',
+	contains: {
+	type: 'string',
+},
+	isRequired: true,
+},
 	},
 } as const;

@@ -88,5 +88,6 @@ export type VesselPublic = {
 	name: string;
 	id: string;
 	valves: Array<ValvePublic>;
+	equipment_identifiers: Array<string>;
 };
 
