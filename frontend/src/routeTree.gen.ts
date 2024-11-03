@@ -15,7 +15,8 @@ import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutVesselsImport } from './routes/_layout/vessels'
+import { Route as LayoutVesselsIndexImport } from './routes/_layout/vessels/index'
+import { Route as LayoutVesselsVesselIdImport } from './routes/_layout/vessels/$vesselId'
 
 // Create/Update Routes
 
@@ -39,8 +40,13 @@ const LayoutIndexRoute = LayoutIndexImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
-const LayoutVesselsRoute = LayoutVesselsImport.update({
-  path: '/vessels',
+const LayoutVesselsIndexRoute = LayoutVesselsIndexImport.update({
+  path: '/vessels/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutVesselsVesselIdRoute = LayoutVesselsVesselIdImport.update({
+  path: '/vessels/$vesselId',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -60,12 +66,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/vessels': {
-      preLoaderRoute: typeof LayoutVesselsImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/': {
       preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/vessels/$vesselId': {
+      preLoaderRoute: typeof LayoutVesselsVesselIdImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/vessels/': {
+      preLoaderRoute: typeof LayoutVesselsIndexImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -74,7 +84,11 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  LayoutRoute.addChildren([LayoutVesselsRoute, LayoutIndexRoute]),
+  LayoutRoute.addChildren([
+    LayoutIndexRoute,
+    LayoutVesselsVesselIdRoute,
+    LayoutVesselsIndexRoute,
+  ]),
   LoginRoute,
   SignupRoute,
 ])

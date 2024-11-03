@@ -9,40 +9,46 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
-import { z } from "zod"
+} from "@chakra-ui/react";
+import { Link } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { z } from "zod";
 
-import { VesselsService } from "../../client/index.ts"
-import { PaginationFooter } from "../../components/Common/PaginationFooter.tsx"
+import { VesselsService } from "../../../client/index.ts";
+import { PaginationFooter } from "../../../components/Common/PaginationFooter.tsx";
 
 const vesselsSearchSchema = z.object({
   page: z.number().catch(1),
-})
+});
 
-export const Route = createFileRoute("/_layout/vessels")({
+export const Route = createFileRoute("/_layout/vessels/")({
   component: Vessels,
   validateSearch: (search) => vesselsSearchSchema.parse(search),
-})
+});
 
-const PER_PAGE = 5
+const PER_PAGE = 5;
 
 function getVesselsQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      VesselsService.readVessels({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      VesselsService.readVessels({
+        skip: (page - 1) * PER_PAGE,
+        limit: PER_PAGE,
+      }),
     queryKey: ["vessels", { page }],
-  }
+  };
 }
 
 function VesselsTable() {
-  const queryClient = useQueryClient()
-  const { page } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
+  const queryClient = useQueryClient();
+  const { page } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
   const setPage = (page: number) =>
-    navigate({ search: (prev: {[key: string]: string}) => ({ ...prev, page }) })
+    navigate({
+      search: (prev: { [key: string]: string }) => ({ ...prev, page }),
+    });
 
   const {
     data: vessels,
@@ -51,16 +57,16 @@ function VesselsTable() {
   } = useQuery({
     ...getVesselsQueryOptions({ page }),
     placeholderData: (prevData) => prevData,
-  })
+  });
 
-  const hasNextPage = !isPlaceholderData && vessels?.data.length === PER_PAGE
-  const hasPreviousPage = page > 1
+  const hasNextPage = !isPlaceholderData && vessels?.data.length === PER_PAGE;
+  const hasPreviousPage = page > 1;
 
   useEffect(() => {
     if (hasNextPage) {
-      queryClient.prefetchQuery(getVesselsQueryOptions({ page: page + 1 }))
+      queryClient.prefetchQuery(getVesselsQueryOptions({ page: page + 1 }));
     }
-  }, [page, queryClient, hasNextPage])
+  }, [page, queryClient, hasNextPage]);
 
   return (
     <>
@@ -86,19 +92,24 @@ function VesselsTable() {
           ) : (
             <Tbody>
               {vessels?.data.map((vessel) => (
-                <Tr key={vessel.id} opacity={isPlaceholderData ? 0.5 : 1}>
-                  <Td>{vessel.id}</Td>
-                  <Td isTruncated maxWidth="150px">
-                    {vessel.name}
-                  </Td>
-                  <Td
-                    color={!vessel.version ? "ui.dim" : "inherit"}
-                    isTruncated
-                    maxWidth="150px"
-                  >
-                    {vessel.version || "N/A"}
-                  </Td>
-                </Tr>
+                
+                  <Tr key={vessel.id} opacity={isPlaceholderData ? 0.5 : 1}>
+                    <Td>
+                      <Link to="/vessels/$vesselId" params={{ vesselId: vessel.id }}>{vessel.id}</Link>
+                      
+                    </Td>
+                    <Td isTruncated maxWidth="150px">
+                      {vessel.name}
+                    </Td>
+                    <Td
+                      color={!vessel.version ? "ui.dim" : "inherit"}
+                      isTruncated
+                      maxWidth="150px"
+                    >
+                      {vessel.version || "N/A"}
+                    </Td>
+                  </Tr>
+                
               ))}
             </Tbody>
           )}
@@ -111,7 +122,7 @@ function VesselsTable() {
         hasPreviousPage={hasPreviousPage}
       />
     </>
-  )
+  );
 }
 
 function Vessels() {
@@ -122,5 +133,5 @@ function Vessels() {
       </Heading>
       <VesselsTable />
     </Container>
-  )
+  );
 }
