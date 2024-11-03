@@ -1,4 +1,5 @@
-import { Flex } from "@chakra-ui/react";
+import React, { useCallback } from "react";
+import { Flex, Container, Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { VesselsService, VesselPublic } from "../../../client/index.ts";
@@ -134,36 +135,47 @@ function VesselDetail() {
   const { state: vesselState, updateValve } = useVessel(vesselId!);
   const { state: equipmentState, selectEquipment, fetchEquipment } = useEquipment(vesselId);
 
+  const handleValveToggle = useCallback(
+    async (identifier: string, isOpen: boolean) => {
+      await updateValve(identifier, isOpen);
+      if (equipmentState.selected) {
+        await fetchEquipment(equipmentState.selected);
+      }
+    },
+    [updateValve, equipmentState.selected, fetchEquipment]
+  );
+
   if (vesselState.loading) return <div>Loading...</div>;
   if (vesselState.error) return <div>Error: {vesselState.error}</div>;
   if (!vesselState.vessel) return <div>No vessel found</div>;
 
-  const handleValveToggle = async (identifier: string, isOpen: boolean) => {
-    await updateValve(identifier, isOpen);
-    if (equipmentState.selected) {
-      fetchEquipment(equipmentState.selected);
-    }
-  };
-
   return (
-    <div>
-      <h1>{vesselState.vessel.name}</h1>
-      <p>ID: {vesselState.vessel.id}</p>
-      <p>Version: {vesselState.vessel.version}</p>
-      <h1>Valves</h1>
-      <Flex gap="4" direction="row" justify="space-between" w="50vw">
-        <ValvesList 
-          valves={vesselState.vessel.valves}
-          onToggleValve={handleValveToggle}
-        />
-        <EquipmentSelect
-          equipmentIdentifiers={vesselState.vessel.equipment_identifiers}
-          selectedEquipment={equipmentState.selected}
-          connectedEquipment={equipmentState.identifiers}
-          onEquipmentSelect={selectEquipment}
-        />
-      </Flex>
-    </div>
+    <>
+      <Container maxW="full">
+        <Box pt={12} m={4}>
+          <h1>{vesselState.vessel.name}</h1>
+          <p>ID: {vesselState.vessel.id}</p>
+          <p>Version: {vesselState.vessel.version}</p>
+          <h1>Valves</h1>
+          <Flex gap="4">
+            <Box flex="1">
+              <ValvesList 
+                valves={vesselState.vessel.valves}
+                onToggleValve={handleValveToggle}
+              />
+            </Box>
+            <Box flex="1">
+              <EquipmentSelect
+                equipmentIdentifiers={vesselState.vessel.equipment_identifiers}
+                selectedEquipment={equipmentState.selected}
+                connectedEquipment={equipmentState.identifiers}
+                onEquipmentSelect={selectEquipment}
+              />
+            </Box>
+          </Flex>
+        </Box>
+      </Container>
+    </>
   );
 }
 

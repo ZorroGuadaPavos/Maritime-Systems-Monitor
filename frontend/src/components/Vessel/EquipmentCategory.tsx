@@ -1,5 +1,4 @@
-import React from "react";
-import { Box, Text, Divider } from "@chakra-ui/react";
+import { Box, Text, Divider, HStack } from "@chakra-ui/react";
 
 interface EquipmentCategoryProps {
   category: string;
@@ -10,10 +9,10 @@ export const EquipmentCategory = ({ category, identifiers }: EquipmentCategoryPr
   <Box>
     <Text fontWeight="bold">{category}:</Text>
     <Divider />
-    {identifiers
-      .sort((a, b) => a.localeCompare(b))
-      .map((identifier) => (
-        <span key={identifier}>{identifier}, </span>
+    <HStack>
+      {identifiers.map((identifier) => (
+        <Text key={identifier}>{identifier}</Text>
       ))}
+    </HStack>
   </Box>
 );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Select, Box, Flex } from "@chakra-ui/react";
 import { EquipmentCategory } from "./EquipmentCategory";
 
@@ -21,27 +21,36 @@ export const EquipmentSelect = ({
   selectedEquipment,
   connectedEquipment,
   onEquipmentSelect,
-}: EquipmentSelectProps) => (
-  <Box maxW="560px" minW="560px">
-    <Select
-      placeholder="Select equipment identifier"
-      value={selectedEquipment || ""}
-      onChange={(e) => onEquipmentSelect(e.target.value)}
-    >
-      {equipmentIdentifiers.map((identifier) => (
-        <option key={identifier} value={identifier}>
-          {identifier}
-        </option>
-      ))}
-    </Select>
-    <Flex direction="column">
-      {Object.entries(EQUIPMENT_CATEGORIES).map(([category, filterFn]) => (
-        <EquipmentCategory
-          key={category}
-          category={category}
-          identifiers={connectedEquipment.filter(filterFn)}
-        />
-      ))}
-    </Flex>
-  </Box>
-);
+}: EquipmentSelectProps) => {
+  const sortedEquipmentIdentifiers = useMemo(() => {
+    return [...equipmentIdentifiers].sort((a, b) => a.localeCompare(b));
+  }, [equipmentIdentifiers]);
+
+  const equipmentCategories = useMemo(() => {
+    return Object.entries(EQUIPMENT_CATEGORIES).map(([category, filterFn]) => ({
+      category,
+      identifiers: connectedEquipment.filter(filterFn).sort((a, b) => a.localeCompare(b)),
+    }));
+  }, [connectedEquipment]);
+
+  return (
+    <Box w="full">
+      <Select
+        placeholder="Select equipment identifier"
+        value={selectedEquipment || ""}
+        onChange={(e) => onEquipmentSelect(e.target.value)}
+      >
+        {sortedEquipmentIdentifiers.map((identifier) => (
+          <option key={identifier} value={identifier}>
+            {identifier}
+          </option>
+        ))}
+      </Select>
+      <Flex direction="column">
+        {equipmentCategories.map(({ category, identifiers }) => (
+          <EquipmentCategory key={category} category={category} identifiers={identifiers} />
+        ))}
+      </Flex>
+    </Box>
+  );
+};
