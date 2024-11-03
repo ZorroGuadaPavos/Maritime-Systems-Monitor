@@ -16,9 +16,8 @@ const SidebarVessels = ({ onClose }: SidebarVesselsProps) => {
   const textColor = useColorModeValue("ui.main", "ui.light")
   const bgActive = useColorModeValue("#E2E8F0", "#4A5568")
 
-  const finalVessels = vessels
 
-  const listVessels = finalVessels.map(({ icon, title, path }) => (
+  const listVessels = vessels.map(({ icon, title, path }) => (
     <Flex
       as={Link}
       to={path}
