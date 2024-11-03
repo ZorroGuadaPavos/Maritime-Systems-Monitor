@@ -1,9 +1,7 @@
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
-import { useQueryClient } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
-import { FiAnchor , FiHome,  FiUsers } from "react-icons/fi"
+import { FiAnchor , FiHome } from "react-icons/fi"
 
-import type { UserPublic } from "../../client"
 
 const vessels = [
   { icon: FiHome, title: "Dashboard", path: "/" },
@@ -15,14 +13,10 @@ interface SidebarVesselsProps {
 }
 
 const SidebarVessels = ({ onClose }: SidebarVesselsProps) => {
-  const queryClient = useQueryClient()
   const textColor = useColorModeValue("ui.main", "ui.light")
   const bgActive = useColorModeValue("#E2E8F0", "#4A5568")
-  const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"])
 
-  const finalVessels = currentUser?.is_superuser
-    ? [...vessels, { icon: FiUsers, title: "Admin", path: "/admin" }]
-    : vessels
+  const finalVessels = vessels
 
   const listVessels = finalVessels.map(({ icon, title, path }) => (
     <Flex
