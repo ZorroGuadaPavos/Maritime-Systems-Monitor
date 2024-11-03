@@ -1,9 +1,2 @@
-__pycache__
-app.egg-info
-*.pyc
-.coverage
-htmlcov
-.cache
-.venv
 .vscode
-.env.*
+node_modules/
