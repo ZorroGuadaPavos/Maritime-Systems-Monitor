@@ -70,8 +70,7 @@ function VesselsTable() {
             <Tr>
               <Th>ID</Th>
               <Th>Title</Th>
-              <Th>name</Th>
-              <Th>Actions</Th>
+              <Th>Version</Th>
             </Tr>
           </Thead>
           {isPending ? (
@@ -93,11 +92,11 @@ function VesselsTable() {
                     {vessel.name}
                   </Td>
                   <Td
-                    color={!vessel.name ? "ui.dim" : "inherit"}
+                    color={!vessel.version ? "ui.dim" : "inherit"}
                     isTruncated
                     maxWidth="150px"
                   >
-                    {vessel.name || "N/A"}
+                    {vessel.version || "N/A"}
                   </Td>
                 </Tr>
               ))}

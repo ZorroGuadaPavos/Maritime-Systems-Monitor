@@ -180,6 +180,10 @@ export const $ValvePublic = {
 
 export const $VesselList = {
 	properties: {
+		version: {
+	type: 'string',
+	isRequired: true,
+},
 		name: {
 	type: 'string',
 	isRequired: true,
@@ -211,6 +215,10 @@ export const $VesselListPublic = {
 
 export const $VesselPublic = {
 	properties: {
+		version: {
+	type: 'string',
+	isRequired: true,
+},
 		name: {
 	type: 'string',
 	isRequired: true,

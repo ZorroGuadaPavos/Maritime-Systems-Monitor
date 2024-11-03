@@ -63,6 +63,7 @@ export type ValvePublic = {
 
 
 export type VesselList = {
+	version: string;
 	name: string;
 	id: string;
 };
@@ -77,6 +78,7 @@ export type VesselListPublic = {
 
 
 export type VesselPublic = {
+	version: string;
 	name: string;
 	id: string;
 };
