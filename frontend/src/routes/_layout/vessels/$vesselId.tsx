@@ -29,22 +29,37 @@ export const Route = createFileRoute("/_layout/vessels/$vesselId")({
         });
     };
 
-    const getVesselEquipment = (
+    type EquipmentResponse = Array<string>;
+
+    const getVesselEquipment = async (
       vesselId: string,
-      equipmentIdentifier: string
-    ) => {
-      VesselsService.fetchConnectedEquipment({ vesselId, equipmentIdentifier })
-        .then((response) => {
-          setEquipmentIdentifiers(response);
-          console.log("response", response);
-        })
-        .catch((err) => {
-          setError(err.message);
-        })
-        .finally(() => {
-          setLoading(false);
+      equipmentIdentifier: string | null
+    ): Promise<EquipmentResponse | null> => {
+      if (!equipmentIdentifier) return null;
+
+      try {
+        const response = await VesselsService.fetchConnectedEquipment({
+          vesselId,
+          equipmentIdentifier,
         });
+        setEquipmentIdentifiers(response);
+        return response;
+      } catch (err) {
+        const error = err as Error;
+        setError(error.message);
+        return null;
+      } finally {
+        setLoading(false);
+      }
     };
+
+    // Usage in component:
+    useEffect(() => {
+      if (equipmentSelected) {
+        setLoading(true);
+        getVesselEquipment(vesselId, equipmentSelected);
+      }
+    }, [equipmentSelected, vesselId]);
 
     const handleToggle = async (valveIdentifier: string, isOpen: boolean) => {
       try {
@@ -67,6 +82,32 @@ export const Route = createFileRoute("/_layout/vessels/$vesselId")({
         setError(err.message);
       }
     };
+    const EQUIPMENT_CATEGORIES = {
+      Pipes: (id: string) => id.startsWith("PI"),
+      Tanks: (id: string) => id.startsWith("TA"),
+      Pumps: (id: string) => id.startsWith("PU"),
+      Sea: (id: string) =>
+        !id.startsWith("PI") && !id.startsWith("TA") && !id.startsWith("PU"),
+    } as const;
+
+    // Then, create a reusable EquipmentCategory component
+    const EquipmentCategory = ({
+      category,
+      identifiers,
+    }: {
+      category: string;
+      identifiers: string[];
+    }) => (
+      <Box key={category}>
+        <Text fontWeight="bold">{category}:</Text>
+        <Divider />
+        {identifiers
+          .sort((a, b) => a.localeCompare(b))
+          .map((identifier) => (
+            <span key={identifier}>{identifier}, </span>
+          ))}
+      </Box>
+    );
 
     useEffect(() => {
       getVessel(vesselId);
@@ -101,6 +142,7 @@ export const Route = createFileRoute("/_layout/vessels/$vesselId")({
           <Box maxW="560px" minW="560px">
             <Select
               placeholder="Select equipment identifier"
+              value={equipmentSelected || ""} // Add value prop to make it controlled
               onChange={({ target }) => {
                 setEquipmentSelected(target.value);
                 getVesselEquipment(vessel?.id, target.value);
@@ -113,53 +155,15 @@ export const Route = createFileRoute("/_layout/vessels/$vesselId")({
               ))}
             </Select>
             <Flex direction="column">
-              {equipmentIdentifiers.reduce(
-                (categories, identifier) => {
-                  if (identifier.startsWith("PI")) {
-                    categories.Pipes.push(identifier);
-                  } else if (identifier.startsWith("T")) {
-                    categories.Tanks.push(identifier);
-                  } else if (identifier.startsWith("PU")) {
-                    categories.Pumps.push(identifier);
-                  } else {
-                    categories.Sea.push(identifier);
-                  }
-                  return categories;
-                },
-                {
-                  Pipes: [] as string[],
-                  Tanks: [] as string[],
-                  Pumps: [] as string[],
-                  Sea: [] as string[],
-                }
-              ) &&
-                Object.entries({
-                  Pipes: equipmentIdentifiers.filter((id) =>
-                    id.startsWith("PI")
-                  ),
-                  Tanks: equipmentIdentifiers.filter((id) =>
-                    id.startsWith("T")
-                  ),
-                  Pumps: equipmentIdentifiers.filter((id) =>
-                    id.startsWith("PU")
-                  ),
-                  Sea: equipmentIdentifiers.filter(
-                    (id) =>
-                      !id.startsWith("PI") &&
-                      !id.startsWith("T") &&
-                      !id.startsWith("PU")
-                  ),
-                }).map(([category, ids]) => (
-                  <Box key={category}>
-                    <Text fontWeight="bold">{category}:</Text>
-                    <Divider />
-                      {ids
-                        .sort((a, b) => a.localeCompare(b))
-                        .map((identifier) => (
-                          <span>{identifier}, </span>
-                        ))}
-                  </Box>
-                ))}
+              {Object.entries(EQUIPMENT_CATEGORIES).map(
+                ([category, filterFn]) => (
+                  <EquipmentCategory
+                    key={category}
+                    category={category}
+                    identifiers={equipmentIdentifiers.filter(filterFn)}
+                  />
+                )
+              )}
             </Flex>
           </Box>
         </Flex>
