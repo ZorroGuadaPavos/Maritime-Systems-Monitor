@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Vessel Connections",
+    "title": "FastAPI Project",
     "version": "0.1.0"
   },
   "paths": {
@@ -723,13 +723,21 @@
             "type": "string",
             "format": "uuid",
             "title": "Id"
+          },
+          "valves": {
+            "items": {
+              "$ref": "#/components/schemas/ValvePublic"
+            },
+            "type": "array",
+            "title": "Valves"
           }
         },
         "type": "object",
         "required": [
           "version",
           "name",
-          "id"
+          "id",
+          "valves"
         ],
         "title": "VesselPublic"
       }

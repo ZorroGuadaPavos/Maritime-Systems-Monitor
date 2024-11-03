@@ -229,5 +229,12 @@ export const $VesselPublic = {
 	isRequired: true,
 	format: 'uuid',
 },
+		valves: {
+	type: 'array',
+	contains: {
+		type: 'ValvePublic',
+	},
+	isRequired: true,
+},
 	},
 } as const;

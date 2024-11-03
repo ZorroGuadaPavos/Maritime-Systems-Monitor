@@ -25,6 +25,7 @@ class ValveBase(SQLModel):
 
 class VesselPublic(VesselBase):
     id: uuid.UUID
+    valves: list['ValvePublic']
 
 
 class ValvePublic(ValveBase):

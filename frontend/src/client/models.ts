@@ -81,5 +81,6 @@ export type VesselPublic = {
 	version: string;
 	name: string;
 	id: string;
+	valves: Array<ValvePublic>;
 };
 
