@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Select, Box, Flex } from "@chakra-ui/react";
+import { Select, Box, Flex, FormControl, FormLabel, FormHelperText } from "@chakra-ui/react";
 import { EquipmentCategory } from "./EquipmentCategory";
 
 export const EQUIPMENT_CATEGORIES = {
@@ -23,9 +23,6 @@ export const EquipmentSelect = ({
   connectedEquipment,
   onEquipmentSelect,
 }: EquipmentSelectProps) => {
-  const sortedEquipmentIdentifiers = useMemo(() => {
-    return [...equipmentIdentifiers].sort((a, b) => a.localeCompare(b));
-  }, [equipmentIdentifiers]);
 
   const equipmentCategories = useMemo(() => {
     return Object.entries(EQUIPMENT_CATEGORIES).map(([category, filterFn]) => ({
@@ -38,18 +35,24 @@ export const EquipmentSelect = ({
 
   return (
     <Box w="full">
-      <Select
-        placeholder="Select equipment identifier"
-        value={selectedEquipment || ""}
-        onChange={(e) => onEquipmentSelect(e.target.value)}
-        focusBorderColor="ui.main"
-      >
-        {sortedEquipmentIdentifiers.map((identifier) => (
-          <option key={identifier} value={identifier}>
-            {identifier}
-          </option>
-        ))}
-      </Select>
+      <FormControl>
+        <FormLabel>Select Equipment Identifier</FormLabel>
+        <FormHelperText>
+          Select an identifier to view all connected equipment based on the valves.
+        </FormHelperText>
+        <Select
+          placeholder="--"
+          value={selectedEquipment || ""}
+          onChange={(e) => onEquipmentSelect(e.target.value)}
+          focusBorderColor="ui.main"
+        >
+          {equipmentIdentifiers.map((identifier) => (
+            <option key={identifier} value={identifier}>
+              {identifier}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
       <Flex direction="column" w="full" mt={4}>
         {equipmentCategories.map(({ category, identifiers }) => (
           <EquipmentCategory
