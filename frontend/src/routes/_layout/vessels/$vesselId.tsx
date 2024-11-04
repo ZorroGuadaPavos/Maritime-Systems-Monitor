@@ -165,7 +165,7 @@ function VesselDetail() {
           <Text fontSize="xl" color="ui.dark">{vesselState.vessel.name}</Text>
           <Text>ID: <Text as="span" color="ui.dim">{vesselState.vessel.id}</Text></Text>
           <Text>Version: <Text as="span" color="ui.dim">{vesselState.vessel.version}</Text></Text>
-          <Flex gap="4" mt={4} p={4} borderRadius="md">
+          <Flex gap="4" mt={4} p={4} borderRadius="md" direction={{ base: "column", md: "row" }}>
             <Box flex="1">
               <ValvesList
                 valves={vesselState.vessel.valves}
@@ -181,6 +181,9 @@ function VesselDetail() {
               />
             </Box>
           </Flex>
+          <Text mt={6} fontStyle="italic">
+            Equipment Key: VA = Valve (e.g., VA001), TA = Tank (e.g., TA001), PI = Pipe (e.g., PI001), PU = Pump (e.g., PU001).
+          </Text>
         </Box>
       </Container>
     </>

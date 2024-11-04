@@ -92,24 +92,24 @@ function VesselsTable() {
           ) : (
             <Tbody>
               {vessels?.data.map((vessel) => (
-                
-                  <Tr key={vessel.id} opacity={isPlaceholderData ? 0.5 : 1}>
-                    <Td>
-                      <Link to="/vessels/$vesselId" params={{ vesselId: vessel.id }}>{vessel.id}</Link>
-                      
-                    </Td>
-                    <Td isTruncated maxWidth="150px">
-                      {vessel.name}
-                    </Td>
-                    <Td
-                      color={!vessel.version ? "ui.dim" : "inherit"}
-                      isTruncated
-                      maxWidth="150px"
-                    >
-                      {vessel.version || "N/A"}
-                    </Td>
-                  </Tr>
-                
+                <Tr
+                  key={vessel.id}
+                  opacity={isPlaceholderData ? 0.5 : 1}
+                  onClick={() => navigate({ to: `/vessels/${vessel.id}` })}
+                  cursor="pointer"
+                >
+                  <Td>{vessel.id}</Td>
+                  <Td isTruncated maxWidth="150px">
+                    {vessel.name}
+                  </Td>
+                  <Td
+                    color={!vessel.version ? "ui.dim" : "inherit"}
+                    isTruncated
+                    maxWidth="150px"
+                  >
+                    {vessel.version || "N/A"}
+                  </Td>
+                </Tr>
               ))}
             </Tbody>
           )}

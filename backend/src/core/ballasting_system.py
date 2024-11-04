@@ -21,7 +21,7 @@ class BallastingSystem:
 
     def _process_components(self, components: dict, prefix: str) -> dict:
         """
-        Transform the components dictionary into a dictionary with prefixed component IDs
+        Transform the components dictionary into a dictionary with prefixed component IDs and addes them to the equipment_identifiers
         """
         result = {f'{prefix}{cid}': [f'VA{vid}' for vid in valves] for cid, valves in components.items()}
         self.equipment_identifiers.extend(result.keys())

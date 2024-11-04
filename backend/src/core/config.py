@@ -2,7 +2,7 @@ import secrets
 import warnings
 from typing import Annotated, Any, Literal
 
-from pydantic import AnyUrl, BeforeValidator, HttpUrl, PostgresDsn, computed_field, model_validator
+from pydantic import AnyUrl, BeforeValidator, PostgresDsn, computed_field, model_validator
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Self
@@ -35,9 +35,9 @@ class Settings(BaseSettings):
 
     BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = []
 
-    EMAIL_TEST_USER: str = 'test@example.com'
     PROJECT_NAME: str
-    SENTRY_DSN: HttpUrl | None = None
+    EMAIL_TEST_USER: str = 'test@example.com'
+
     POSTGRES_SERVER: str
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str
