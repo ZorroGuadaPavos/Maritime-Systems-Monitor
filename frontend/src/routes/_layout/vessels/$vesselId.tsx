@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Flex, Container, Box, Heading } from "@chakra-ui/react";
+import { Flex, Container, Box, Heading, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { VesselsService, VesselPublic } from "../../../client/index.ts";
@@ -130,7 +130,6 @@ const useEquipment = (vesselId: string) => {
   return { state, selectEquipment, fetchEquipment };
 };
 
-// Component
 function VesselDetail() {
   const { vesselId } = useParams<{ vesselId: string }>();
 
@@ -157,15 +156,16 @@ function VesselDetail() {
 
   return (
     <>
-      <Container maxW="full">
-        <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
-          Vessel Management
+      <Container maxW="full" >
+        <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}
+        >
+          Vessel Settings
         </Heading>
-        <Box pt={12} m={4}>
-          <h1>{vesselState.vessel.name}</h1>
-          <p>ID: {vesselState.vessel.id}</p>
-          <p>Version: {vesselState.vessel.version}</p>
-          <Flex gap="4">
+        <Box pt={12} m={4} bg="ui.light" p={6} borderRadius="md" boxShadow="md">
+          <Text fontSize="xl" color="ui.dark">{vesselState.vessel.name}</Text>
+          <Text>ID: <Text as="span" color="ui.dim">{vesselState.vessel.id}</Text></Text>
+          <Text>Version: <Text as="span" color="ui.dim">{vesselState.vessel.version}</Text></Text>
+          <Flex gap="4" mt={4} p={4} borderRadius="md">
             <Box flex="1">
               <ValvesList
                 valves={vesselState.vessel.valves}
