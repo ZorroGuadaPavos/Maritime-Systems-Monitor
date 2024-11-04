@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Vessel Connections"
 authors = ["Andres <4ndres.or@gmail.com>"]
 readme = "README.md"
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -18,10 +19,10 @@ psycopg = "3.2.1"
 psycopg-binary = "3.2.1"
 pydantic-settings = "2.4.0"
 pyjwt = "2.9.0"
+passlib = { version = "^1.7.4", extras = ["bcrypt"] }
+bcrypt = "^4.0.0"
 sentry-sdk = "2.12.0"
 sqlmodel = "0.0.21"
-passlib = {version = "1.7.4", extras = ["bcrypt"]}
-bcrypt = "4.0.1"
 tenacity = "9.0.0"
 uvicorn = "0.30.5"
 fastapi-pagination = "^0.12.31"
