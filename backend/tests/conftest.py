@@ -8,6 +8,7 @@ from src.core.config import settings
 from src.core.db import engine, init_db
 from src.main import app
 from src.users.models import User
+from src.vessels.models import Valve, Vessel
 from tests.utils.user import authentication_token_from_email
 from tests.utils.utils import get_superuser_token_headers
 
@@ -18,6 +19,10 @@ def db() -> Generator[Session, None, None]:
         init_db(session)
         yield session
         statement = delete(User)
+        session.execute(statement)
+        statement = delete(Valve)
+        session.execute(statement)
+        statement = delete(Vessel)
         session.execute(statement)
         session.commit()
 

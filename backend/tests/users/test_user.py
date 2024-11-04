@@ -1,13 +1,9 @@
 from fastapi.encoders import jsonable_encoder
 from sqlmodel import Session
 
-import src.users.services
-from src.auth.services import authenticate
 from src.users.models import User
-from src.users.schemas import (
-    UserCreate,
-)
-from src.users.services import create_user
+from src.users.schemas import UserCreate
+from src.users.services import create_user, get_user_by_email
 from tests.utils.utils import random_email, random_lower_string
 
 
@@ -18,23 +14,6 @@ def test_create_user(db: Session) -> None:
     user = create_user(session=db, user_create=user_in)
     assert user.email == email
     assert hasattr(user, 'hashed_password')
-
-
-def test_authenticate_user(db: Session) -> None:
-    email = random_email()
-    password = random_lower_string()
-    user_in = UserCreate(email=email, password=password)
-    user = create_user(session=db, user_create=user_in)
-    authenticated_user = src.auth.services.authenticate(session=db, email=email, password=password)
-    assert authenticated_user
-    assert user.email == authenticated_user.email
-
-
-def test_not_authenticate_user(db: Session) -> None:
-    email = random_email()
-    password = random_lower_string()
-    user = authenticate(session=db, email=email, password=password)
-    assert user is None
 
 
 def test_check_if_user_is_active(db: Session) -> None:
@@ -78,3 +57,13 @@ def test_get_user(db: Session) -> None:
     assert user_2
     assert user.email == user_2.email
     assert jsonable_encoder(user) == jsonable_encoder(user_2)
+
+
+def test_get_user_by_email(db: Session) -> None:
+    email = random_email()
+    password = random_lower_string()
+    user_in = UserCreate(email=email, password=password)
+    create_user(session=db, user_create=user_in)
+    user = get_user_by_email(session=db, email=email)
+    assert user is not None
+    assert user.email == email
