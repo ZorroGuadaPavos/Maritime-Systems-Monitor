@@ -31,6 +31,7 @@ class BallastingSystem:
         """
         Build the graph of connections between equipment and valves
         """
+        self.graph = defaultdict(list)  # Reset the graph
         self._add_connections(self.tanks)
         self._add_connections(self.sea)
         self._add_connections(self.pipes, connect_sequence=True)

@@ -3,10 +3,10 @@ import logging
 import yaml
 from sqlmodel import Session
 
-from src.core.ballasting_system import BallastingSystem
 from src.core.config import settings
 from src.core.db import engine
 from src.vessels.services import create_or_update_vessel, update_vessel_valves
+from src.vessels.utils import BallastingSystem
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
