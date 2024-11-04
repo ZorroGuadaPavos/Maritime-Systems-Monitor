@@ -100,9 +100,7 @@ def test_register_user_already_exists_error(client: TestClient) -> None:
             'password': password,
             'full_name': full_name,
         }
-        r = client.post(
-            f'{settings.API_V1_STR}/users/signup',
-            json=data,
-        )
+        client.post(f'{settings.API_V1_STR}/users/signup', json=data)
+        r = client.post(f'{settings.API_V1_STR}/users/signup', json=data)
         assert r.status_code == 400
         assert r.json()['detail'] == 'The user with this email already exists in the system'

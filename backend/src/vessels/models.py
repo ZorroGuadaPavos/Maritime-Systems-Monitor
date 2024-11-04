@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlmodel import JSON, Field, Relationship
+from sqlmodel import JSON, Field, Relationship, UniqueConstraint
 
 from src.vessels.schemas import ValveBase, VesselBase
 
@@ -12,6 +12,7 @@ class Vessel(VesselBase, table=True):
     equipment_identifiers: list[str] = Field(sa_type=JSON, default=[])
     equipment_connections: dict = Field(sa_type=JSON, default={})
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    __table_args__ = (UniqueConstraint('name', 'version'),)
 
 
 class Valve(ValveBase, table=True):

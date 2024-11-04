@@ -1,11 +1,12 @@
 import uuid
+from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
 
 class VesselBase(SQLModel):
     version: str
-    name: str = Field(index=True, max_length=30)
+    name: str = Field(index=True, max_length=100)
 
 
 class VesselList(VesselBase):
@@ -47,6 +48,6 @@ class VesselCreate(VesselBase):
 
 
 class VesselUpdate(SQLModel):
-    name: str | None
-    equipment_connections: dict
-    equipment_identifiers: list[str]
+    name: Optional[str] = None
+    equipment_connections: Optional[dict] = None
+    equipment_identifiers: Optional[list[str]] = None

@@ -1,21 +1,20 @@
 import pytest
-from faker import Faker
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
 from src.core.config import settings
 from src.vessels import services
 from src.vessels.schemas import VesselCreate
-from tests.utils.utils import default_equipment_connections, default_equipment_identifiers, default_valve_identifiers
+from tests.utils.utils import random_lower_string
 
 
-@pytest.fixture()
-def vessel(faker: Faker) -> VesselCreate:
+@pytest.fixture
+def vessel(equipment_ids, connections) -> VesselCreate:
     return VesselCreate(
-        name=f'Vessel {faker.vin()}',
+        name=random_lower_string(),
         version='1.0',
-        equipment_connections=default_equipment_connections(),
-        equipment_identifiers=default_equipment_identifiers(),
+        equipment_connections=connections,
+        equipment_identifiers=equipment_ids,
     )
 
 
@@ -32,10 +31,21 @@ def test_read_vessel(
 
 
 def test_read_vessels(
-    client: TestClient, db: Session, normal_user_token_headers: dict[str, str], vessel: VesselCreate
+    client: TestClient,
+    db: Session,
+    normal_user_token_headers: dict[str, str],
+    vessel: VesselCreate,
+    equipment_ids: list,
+    connections: dict,
 ) -> None:
+    vessel2 = VesselCreate(
+        name=random_lower_string(),
+        version='1.0',
+        equipment_connections=connections,
+        equipment_identifiers=equipment_ids,
+    )
     services.create_vessel(session=db, vessel_in=vessel)
-    services.create_vessel(session=db, vessel_in=vessel)
+    services.create_vessel(session=db, vessel_in=vessel2)
 
     r = client.get(
         f'{settings.API_V1_STR}/vessels/', headers=normal_user_token_headers, params={'skip': 0, 'limit': 10}
@@ -81,11 +91,11 @@ def test_update_valve(
 
 
 def test_fetch_connected_equipment(
-    client: TestClient, db: Session, normal_user_token_headers: dict[str, str], vessel: VesselCreate
+    client: TestClient, db: Session, normal_user_token_headers: dict[str, str], vessel: VesselCreate, valve_ids: list
 ) -> None:
     equipment_indentifier = 'TA003'
     vessel = services.create_vessel(session=db, vessel_in=vessel)
-    services.update_vessel_valves(session=db, vessel_id=vessel.id, valves=default_valve_identifiers())
+    services.update_vessel_valves(session=db, vessel_id=vessel.id, valves=valve_ids)
     services.update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA002', is_open=False)
     services.update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA006', is_open=False)
     services.update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA023', is_open=False)
