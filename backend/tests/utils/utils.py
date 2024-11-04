@@ -110,3 +110,32 @@ def default_equipment_identifiers() -> list[str]:
         'overboard',
         'seachest',
     ]
+
+
+def default_valve_identifiers() -> list:
+    return [
+        'VA001',
+        'VA002',
+        'VA003',
+        'VA004',
+        'VA005',
+        'VA006',
+        'VA007',
+        'VA008',
+        'VA009',
+        'VA010',
+        'VA011',
+        'VA012',
+        'VA013',
+        'VA014',
+        'VA015',
+        'VA016',
+        'VA017',
+        'VA018',
+        'VA019',
+        'VA020',
+        'VA021',
+        'VA022',
+        'VA023',
+        'VA024',
+    ]

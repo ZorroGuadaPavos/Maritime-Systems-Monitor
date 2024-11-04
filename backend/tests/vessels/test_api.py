@@ -6,7 +6,7 @@ from sqlmodel import Session
 from src.core.config import settings
 from src.vessels import services
 from src.vessels.schemas import VesselCreate
-from tests.utils.utils import default_equipment_connections, default_equipment_identifiers
+from tests.utils.utils import default_equipment_connections, default_equipment_identifiers, default_valve_identifiers
 
 
 @pytest.fixture()
@@ -83,8 +83,14 @@ def test_update_valve(
 def test_fetch_connected_equipment(
     client: TestClient, db: Session, normal_user_token_headers: dict[str, str], vessel: VesselCreate
 ) -> None:
-    equipment_indentifier = 'TA002'
+    equipment_indentifier = 'TA003'
     vessel = services.create_vessel(session=db, vessel_in=vessel)
+    services.update_vessel_valves(session=db, vessel_id=vessel.id, valves=default_valve_identifiers())
+    services.update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA002', is_open=False)
+    services.update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA006', is_open=False)
+    services.update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA023', is_open=False)
+
+    r = client.get(f'{settings.API_V1_STR}/vessels/{vessel.id}/valves', headers=normal_user_token_headers)
 
     r = client.get(
         f'{settings.API_V1_STR}/vessels/{vessel.id}/connected-equipment/{equipment_indentifier}',
@@ -92,4 +98,4 @@ def test_fetch_connected_equipment(
     )
     assert r.status_code == 200
     connected_equipment = r.json()
-    assert equipment_indentifier in connected_equipment
+    assert sorted(connected_equipment) == sorted(['TA003', 'TA002', 'PI014', 'PI002', 'PI003'])
