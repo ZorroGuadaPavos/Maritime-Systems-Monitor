@@ -51,17 +51,11 @@ def test_get_vessel_by_name_version(db: Session, vessel_in: VesselCreate) -> Non
     assert vessel.version == vessel_in.version
 
 
-def test_update_vessel(db: Session) -> None:
-    vessel_in = VesselCreate(
-        name=random_lower_string(),
-        version='0.0.1',
-        equipment_connections={'pump1': ['valve1']},
-        equipment_identifiers=['pump1', 'valve1'],
-    )
+def test_update_vessel(db: Session, vessel_in: VesselCreate) -> None:
     vessel = create_vessel(session=db, vessel_in=vessel_in)
     update_data = VesselUpdate(
-        equipment_connections={'pump1': ['valve1', 'valve2']},
-        equipment_identifiers=['pump1', 'valve1', 'valve2'],
+        equipment_connections={'PU001': ['VA001', 'VA002']},
+        equipment_identifiers=['PU001', 'VA001', 'VA002'],
     )
     updated_vessel = update_vessel(session=db, vessel=vessel, vessel_in=update_data)
     assert updated_vessel.equipment_connections == update_data.equipment_connections
@@ -71,8 +65,8 @@ def test_update_vessel(db: Session) -> None:
 def test_create_or_update_vessel_create(db: Session) -> None:
     name = random_lower_string()
     version = '0.0.1'
-    equipment_connections = {'pump1': ['valve1']}
-    equipment_identifiers = ['pump1', 'valve1']
+    equipment_connections = {'PU001': ['VA001']}
+    equipment_identifiers = ['PU001', 'VA001']
     vessel = create_or_update_vessel(
         session=db,
         name=name,
@@ -86,22 +80,14 @@ def test_create_or_update_vessel_create(db: Session) -> None:
     assert vessel.equipment_identifiers == equipment_identifiers
 
 
-def test_create_or_update_vessel_update(db: Session) -> None:
-    name = random_lower_string()
-    version = '0.0.1'
-    vessel_in = VesselCreate(
-        name=name,
-        version=version,
-        equipment_connections={'pump1': ['valve1']},
-        equipment_identifiers=['pump1', 'valve1'],
-    )
+def test_create_or_update_vessel_update(db: Session, vessel_in: VesselCreate) -> None:
+    new_equipment_connections = {'PU001': ['VA001', 'VA002']}
+    new_equipment_identifiers = ['PU001', 'PI001', 'PI002']
     vessel = create_vessel(session=db, vessel_in=vessel_in)
-    new_equipment_connections = {'pump1': ['valve1', 'valve2']}
-    new_equipment_identifiers = ['pump1', 'valve1', 'valve2']
     updated_vessel = create_or_update_vessel(
         session=db,
-        name=name,
-        version=version,
+        name=vessel.name,
+        version=vessel.version,
         equipment_connections=new_equipment_connections,
         equipment_identifiers=new_equipment_identifiers,
     )
@@ -110,40 +96,28 @@ def test_create_or_update_vessel_update(db: Session) -> None:
     assert updated_vessel.equipment_identifiers == new_equipment_identifiers
 
 
-def test_update_valve(db: Session) -> None:
-    vessel_in = VesselCreate(
-        name=random_lower_string(),
-        version='0.0.1',
-        equipment_connections={},
-        equipment_identifiers=[],
-    )
+def test_update_valve(db: Session, vessel_in: VesselCreate) -> None:
     vessel = create_vessel(session=db, vessel_in=vessel_in)
-    valves = ['valve1']
+    valves = ['VA001']
     update_vessel_valves(session=db, vessel_id=vessel.id, valves=valves)
-    updated_valve = update_valve(session=db, vessel_id=vessel.id, valve_identifier='valve1', is_open=True)
+    updated_valve = update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA001', is_open=True)
     assert updated_valve.is_open is True
 
 
-def test_get_open_valves(db: Session) -> None:
-    vessel_in = VesselCreate(
-        name=random_lower_string(),
-        version='0.0.1',
-        equipment_connections={},
-        equipment_identifiers=[],
-    )
+def test_get_open_valves(db: Session, vessel_in: VesselCreate) -> None:
     vessel = create_vessel(session=db, vessel_in=vessel_in)
-    valves = ['valve1', 'valve2']
+    valves = ['VA001', 'VA002']
     update_vessel_valves(session=db, vessel_id=vessel.id, valves=valves)
-    update_valve(session=db, vessel_id=vessel.id, valve_identifier='valve2', is_open=False)
+    update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA002', is_open=False)
     open_valves = get_open_valves(session=db, vessel_id=vessel.id)
-    assert open_valves == ['valve1']
+    assert open_valves == ['VA001']
 
 
 def test_get_connected_equipment(db: Session, valve_ids: list, vessel_in: VesselCreate) -> None:
     vessel = create_vessel(session=db, vessel_in=vessel_in)
     update_vessel_valves(session=db, vessel_id=vessel.id, valves=valve_ids)
     update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA002', is_open=False)
-    update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA023', is_open=False)
     update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA006', is_open=False)
-    connected_equipment = get_connected_equipment(session=db, vessel=vessel, start='pump1')
-    assert connected_equipment == {'pump1', 'tank1'}
+    update_valve(session=db, vessel_id=vessel.id, valve_identifier='VA023', is_open=False)
+    connected_equipment = get_connected_equipment(session=db, vessel=vessel, start='TA003')
+    assert sorted(connected_equipment) == sorted(['TA003', 'TA002', 'PI014', 'PI002', 'PI003'])
