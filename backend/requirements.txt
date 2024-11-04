@@ -16,6 +16,7 @@ bcrypt==4.0.1
 tenacity==9.0.0
 uvicorn==0.30.5
 fastapi-pagination==0.12.31
+pytest-faker==2.0.0
 
 coverage==7.6.1
 pre-commit==3.8.0

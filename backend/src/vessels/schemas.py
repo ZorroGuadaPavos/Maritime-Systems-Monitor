@@ -1,5 +1,4 @@
 import uuid
-from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
@@ -48,6 +47,6 @@ class VesselCreate(VesselBase):
 
 
 class VesselUpdate(SQLModel):
-    name: Optional[str] = None
+    name: str | None
     equipment_connections: dict
     equipment_identifiers: list[str]

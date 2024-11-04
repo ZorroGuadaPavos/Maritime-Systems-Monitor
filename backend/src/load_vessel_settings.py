@@ -27,7 +27,7 @@ def init_db(ballasting_system: BallastingSystem):
             equipment_connections=ballasting_system.graph,
             equipment_identifiers=ballasting_system.equipment_identifiers,
         )
-        update_vessel_valves(session=session, vessel=vessel, valves=ballasting_system.valve_states)
+        update_vessel_valves(session=session, vessel_id=vessel.id, valves=ballasting_system.valve_states)
 
 
 def main() -> None:

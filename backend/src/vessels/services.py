@@ -52,13 +52,12 @@ def create_or_update_vessel(
     return vessel
 
 
-def update_vessel_valves(*, session: Session, vessel: Vessel, valves: list) -> Vessel:
-    statement = delete(Valve).where(Valve.vessel_id == vessel.id)
+def update_vessel_valves(*, session: Session, vessel_id: int, valves: list[str]) -> Vessel:
+    statement = delete(Valve).where(Valve.vessel_id == vessel_id)
     session.exec(statement)
-    valve_objects = [Valve(identifier=identifier, vessel_id=vessel.id) for identifier in valves]
+    valve_objects = [Valve(identifier=identifier, vessel_id=vessel_id) for identifier in valves]
     session.bulk_save_objects(valve_objects)
     session.commit()
-    return vessel
 
 
 def get_valves(session: Session, vessel_id: int, skip: int = 0, limit: int = 100) -> tuple[list[Valve], int]:
