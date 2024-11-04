@@ -1,5 +1,36 @@
-[tool.ruff]
-exclude = ["alembic"]
-line-length = 120
-[tool.ruff.format]
-quote-style = "single"
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = "Vessel Connections"
+authors = ["Andres <4ndres.or@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {version = "0.112.0", extras = ["standard"]}
+alembic = "1.13.2"
+email-validator = "2.2.0"
+emails = "0.6"
+gunicorn = "22.0.0"
+httpx = "0.27.0"
+jinja2 = "3.1.4"
+psycopg = "3.2.1"
+psycopg-binary = "3.2.1"
+pydantic-settings = "2.4.0"
+pyjwt = "2.9.0"
+sentry-sdk = "2.12.0"
+sqlmodel = "0.0.21"
+passlib = {version = "1.7.4", extras = ["bcrypt"]}
+bcrypt = "4.0.1"
+tenacity = "9.0.0"
+uvicorn = "0.30.5"
+fastapi-pagination = "^0.12.31"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.2"
+ruff = "0.5.6"
+coverage = "7.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
