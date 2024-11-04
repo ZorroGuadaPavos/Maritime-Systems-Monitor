@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { Flex, Container, Box } from "@chakra-ui/react";
+import { useCallback } from "react";
+import { Flex, Container, Box, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { VesselsService, VesselPublic } from "../../../client/index.ts";
@@ -23,7 +23,7 @@ const useVessel = (vesselId: string) => {
   const [state, setState] = useState<VesselState>({
     vessel: null,
     loading: true,
-    error: null
+    error: null,
   });
 
   const updateValve = async (valveIdentifier: string, isOpen: boolean) => {
@@ -33,20 +33,22 @@ const useVessel = (vesselId: string) => {
         valveIdentifier,
         requestBody: { is_open: isOpen },
       });
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
-        vessel: prev.vessel ? {
-          ...prev.vessel,
-          valves: prev.vessel.valves.map(valve =>
-            valve.identifier === valveIdentifier ? updatedValve : valve
-          ),
-        } : null
+        vessel: prev.vessel
+          ? {
+              ...prev.vessel,
+              valves: prev.vessel.valves.map((valve) =>
+                valve.identifier === valveIdentifier ? updatedValve : valve
+              ),
+            }
+          : null,
       }));
     } catch (err) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        error: err instanceof Error ? err.message : 'Unknown error'
+        error: err instanceof Error ? err.message : "Unknown error",
       }));
     }
   };
@@ -58,13 +60,13 @@ const useVessel = (vesselId: string) => {
         setState({
           vessel: response,
           loading: false,
-          error: null
+          error: null,
         });
       } catch (err) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           loading: false,
-          error: err instanceof Error ? err.message : 'Unknown error'
+          error: err instanceof Error ? err.message : "Unknown error",
         }));
       }
     };
@@ -80,42 +82,42 @@ const useEquipment = (vesselId: string) => {
     selected: null,
     identifiers: [],
     loading: false,
-    error: null
+    error: null,
   });
 
   const fetchEquipment = async (equipmentId: string | null) => {
     if (!equipmentId) return null;
 
-    setState(prev => ({ ...prev, loading: true }));
-    
+    setState((prev) => ({ ...prev, loading: true }));
+
     try {
       const response = await VesselsService.fetchConnectedEquipment({
         vesselId,
-        equipmentIdentifier: equipmentId
+        equipmentIdentifier: equipmentId,
       });
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         identifiers: response,
         loading: false,
-        error: null
+        error: null,
       }));
-      
+
       return response;
     } catch (err) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         loading: false,
-        error: err instanceof Error ? err.message : 'Unknown error'
+        error: err instanceof Error ? err.message : "Unknown error",
       }));
       return null;
     }
   };
 
   const selectEquipment = (value: string | null) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      selected: value
+      selected: value,
     }));
   };
 
@@ -131,9 +133,13 @@ const useEquipment = (vesselId: string) => {
 // Component
 function VesselDetail() {
   const { vesselId } = useParams<{ vesselId: string }>();
-  
+
   const { state: vesselState, updateValve } = useVessel(vesselId!);
-  const { state: equipmentState, selectEquipment, fetchEquipment } = useEquipment(vesselId);
+  const {
+    state: equipmentState,
+    selectEquipment,
+    fetchEquipment,
+  } = useEquipment(vesselId);
 
   const handleValveToggle = useCallback(
     async (identifier: string, isOpen: boolean) => {
@@ -152,14 +158,16 @@ function VesselDetail() {
   return (
     <>
       <Container maxW="full">
+        <Heading size="lg" textAlign={{ base: "center", md: "left" }} pt={12}>
+          Vessel Management
+        </Heading>
         <Box pt={12} m={4}>
           <h1>{vesselState.vessel.name}</h1>
           <p>ID: {vesselState.vessel.id}</p>
           <p>Version: {vesselState.vessel.version}</p>
-          <h1>Valves</h1>
           <Flex gap="4">
             <Box flex="1">
-              <ValvesList 
+              <ValvesList
                 valves={vesselState.vessel.valves}
                 onToggleValve={handleValveToggle}
               />
@@ -178,7 +186,6 @@ function VesselDetail() {
     </>
   );
 }
-
 export const Route = createFileRoute("/_layout/vessels/$vesselId")({
   component: VesselDetail,
 });

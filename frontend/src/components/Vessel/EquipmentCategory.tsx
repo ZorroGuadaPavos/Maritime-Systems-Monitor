@@ -1,18 +1,25 @@
-import { Box, Text, Divider, HStack } from "@chakra-ui/react";
+import { Box, Text, Divider, Wrap } from "@chakra-ui/react";
 
 interface EquipmentCategoryProps {
   category: string;
   identifiers: string[];
 }
 
-export const EquipmentCategory = ({ category, identifiers }: EquipmentCategoryProps) => (
+export const EquipmentCategory = ({
+  category,
+  identifiers,
+}: EquipmentCategoryProps) => (
   <Box>
-    <Text fontWeight="bold">{category}:</Text>
-    <Divider />
-    <HStack>
+    <Text fontWeight="bold" color="ui.dark">
+      {category}:
+    </Text>
+    <Divider borderColor="ui.main" />
+    <Wrap>
       {identifiers.map((identifier) => (
-        <Text key={identifier}>{identifier}</Text>
+        <Text key={identifier} color="ui.dim">
+          {identifier}
+        </Text>
       ))}
-    </HStack>
+    </Wrap>
   </Box>
 );

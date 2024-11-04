@@ -1,9 +1,16 @@
 import React, { useMemo, useCallback } from "react";
-import { Switch, Box } from "@chakra-ui/react";
+import {
+  Switch,
+  Box,
+  SimpleGrid,
+  Card,
+  CardBody,
+  Text,
+} from "@chakra-ui/react";
 import { VesselPublic } from "../../client";
 
 interface ValvesListProps {
-  valves: VesselPublic['valves'];
+  valves: VesselPublic["valves"];
   onToggleValve: (identifier: string, isOpen: boolean) => Promise<void>;
 }
 
@@ -21,18 +28,25 @@ export const ValvesList = ({ valves, onToggleValve }: ValvesListProps) => {
 
   return (
     <Box w="full">
-      <ul>
+      <SimpleGrid columns={2} spacing={4}>
         {sortedValves.map((valve) => (
-          <li key={valve.identifier}>
-            <span>{valve.identifier}</span>
-            <Switch
-              value={valve.identifier}
-              isChecked={valve.is_open}
-              onChange={handleToggle(valve.identifier)}
-            />
-          </li>
+          <Card key={valve.identifier} backgroundColor="ui.secondary">
+            <CardBody
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Text color="ui.dark">{valve.identifier}</Text>
+              <Switch
+                value={valve.identifier}
+                isChecked={valve.is_open}
+                onChange={handleToggle(valve.identifier)}
+                colorScheme="uiScheme"
+              />
+            </CardBody>
+          </Card>
         ))}
-      </ul>
+      </SimpleGrid>
     </Box>
   );
 };

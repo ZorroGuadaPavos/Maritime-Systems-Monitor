@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Select, Box, Flex } from "@chakra-ui/react";
 import { EquipmentCategory } from "./EquipmentCategory";
 
@@ -6,7 +6,8 @@ export const EQUIPMENT_CATEGORIES = {
   Pipes: (id: string) => id.startsWith("PI"),
   Tanks: (id: string) => id.startsWith("TA"),
   Pumps: (id: string) => id.startsWith("PU"),
-  Sea: (id: string) => !id.startsWith("PI") && !id.startsWith("TA") && !id.startsWith("PU"),
+  Sea: (id: string) =>
+    !id.startsWith("PI") && !id.startsWith("TA") && !id.startsWith("PU"),
 } as const;
 
 interface EquipmentSelectProps {
@@ -29,7 +30,9 @@ export const EquipmentSelect = ({
   const equipmentCategories = useMemo(() => {
     return Object.entries(EQUIPMENT_CATEGORIES).map(([category, filterFn]) => ({
       category,
-      identifiers: connectedEquipment.filter(filterFn).sort((a, b) => a.localeCompare(b)),
+      identifiers: connectedEquipment
+        .filter(filterFn)
+        .sort((a, b) => a.localeCompare(b)),
     }));
   }, [connectedEquipment]);
 
@@ -39,6 +42,7 @@ export const EquipmentSelect = ({
         placeholder="Select equipment identifier"
         value={selectedEquipment || ""}
         onChange={(e) => onEquipmentSelect(e.target.value)}
+        focusBorderColor="ui.main"
       >
         {sortedEquipmentIdentifiers.map((identifier) => (
           <option key={identifier} value={identifier}>
@@ -46,9 +50,13 @@ export const EquipmentSelect = ({
           </option>
         ))}
       </Select>
-      <Flex direction="column">
+      <Flex direction="column" w="full" mt={4}>
         {equipmentCategories.map(({ category, identifiers }) => (
-          <EquipmentCategory key={category} category={category} identifiers={identifiers} />
+          <EquipmentCategory
+            key={category}
+            category={category}
+            identifiers={identifiers}
+          />
         ))}
       </Flex>
     </Box>
