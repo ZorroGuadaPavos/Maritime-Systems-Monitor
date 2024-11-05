@@ -21,7 +21,7 @@
 
 Explore the API documentation at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
-![Demo Video](vessel-connections.mp4)
+<img src="preview.gif" alt="Preview">
 
 ## How to Run
 
