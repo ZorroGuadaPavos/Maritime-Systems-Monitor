@@ -30,13 +30,13 @@ export const ValvesList = ({ valves, onToggleValve }: ValvesListProps) => {
     <Box w="full">
       <SimpleGrid columns={2} spacing={4}>
         {sortedValves.map((valve) => (
-          <Card key={valve.identifier} backgroundColor="ui.secondary">
+          <Card key={valve.identifier}>
             <CardBody
               display="flex"
               alignItems="center"
               justifyContent="space-between"
             >
-              <Text color="ui.dark">{valve.identifier}</Text>
+              <Text color="ui.light">{valve.identifier}</Text>
               <Switch
                 value={valve.identifier}
                 isChecked={valve.is_open}

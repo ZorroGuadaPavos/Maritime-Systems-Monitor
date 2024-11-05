@@ -161,8 +161,8 @@ function VesselDetail() {
         >
           Vessel Settings
         </Heading>
-        <Box pt={12} m={4} bg="ui.light" p={6} borderRadius="md" boxShadow="md">
-          <Text fontSize="xl" color="ui.dark">{vesselState.vessel.name}</Text>
+        <Box pt={12} m={4} bg="ui.dark" p={6} borderRadius="md" boxShadow="md">
+          <Text fontSize="xl" color="ui.light">{vesselState.vessel.name}</Text>
           <Text>ID: <Text as="span" color="ui.dim">{vesselState.vessel.id}</Text></Text>
           <Text>Version: <Text as="span" color="ui.dim">{vesselState.vessel.version}</Text></Text>
           <Flex gap="4" mt={4} p={4} borderRadius="md" direction={{ base: "column", md: "row" }}>

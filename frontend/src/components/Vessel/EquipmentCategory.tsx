@@ -10,7 +10,7 @@ export const EquipmentCategory = ({
   identifiers,
 }: EquipmentCategoryProps) => (
   <Box>
-    <Text fontWeight="bold" color="ui.dark">
+    <Text fontWeight="bold" color="ui.light">
       {category}:
     </Text>
     <Divider borderColor="ui.main" />
