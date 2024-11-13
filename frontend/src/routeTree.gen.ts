@@ -10,87 +10,87 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SignupImport } from './routes/signup'
-import { Route as LoginImport } from './routes/login'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as LayoutIndexImport } from './routes/_layout/index'
-import { Route as LayoutVesselsIndexImport } from './routes/_layout/vessels/index'
-import { Route as LayoutVesselsVesselIdImport } from './routes/_layout/vessels/$vesselId'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as LayoutImport } from "./routes/_layout";
+import { Route as LayoutIndexImport } from "./routes/_layout/index";
+import { Route as LayoutVesselsVesselIdImport } from "./routes/_layout/vessels/$vesselId";
+import { Route as LayoutVesselsIndexImport } from "./routes/_layout/vessels/index";
+import { Route as LoginImport } from "./routes/login";
+import { Route as SignupImport } from "./routes/signup";
 
 // Create/Update Routes
 
 const SignupRoute = SignupImport.update({
-  path: '/signup',
-  getParentRoute: () => rootRoute,
-} as any)
+	path: "/signup",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const LoginRoute = LoginImport.update({
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
+	path: "/login",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const LayoutRoute = LayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/_layout",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const LayoutIndexRoute = LayoutIndexImport.update({
-  path: '/',
-  getParentRoute: () => LayoutRoute,
-} as any)
+	path: "/",
+	getParentRoute: () => LayoutRoute,
+} as any);
 
 const LayoutVesselsIndexRoute = LayoutVesselsIndexImport.update({
-  path: '/vessels/',
-  getParentRoute: () => LayoutRoute,
-} as any)
+	path: "/vessels/",
+	getParentRoute: () => LayoutRoute,
+} as any);
 
 const LayoutVesselsVesselIdRoute = LayoutVesselsVesselIdImport.update({
-  path: '/vessels/$vesselId',
-  getParentRoute: () => LayoutRoute,
-} as any)
+	path: "/vessels/$vesselId",
+	getParentRoute: () => LayoutRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_layout': {
-      preLoaderRoute: typeof LayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/signup': {
-      preLoaderRoute: typeof SignupImport
-      parentRoute: typeof rootRoute
-    }
-    '/_layout/': {
-      preLoaderRoute: typeof LayoutIndexImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/vessels/$vesselId': {
-      preLoaderRoute: typeof LayoutVesselsVesselIdImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/vessels/': {
-      preLoaderRoute: typeof LayoutVesselsIndexImport
-      parentRoute: typeof LayoutImport
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/_layout": {
+			preLoaderRoute: typeof LayoutImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/login": {
+			preLoaderRoute: typeof LoginImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/signup": {
+			preLoaderRoute: typeof SignupImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/_layout/": {
+			preLoaderRoute: typeof LayoutIndexImport;
+			parentRoute: typeof LayoutImport;
+		};
+		"/_layout/vessels/$vesselId": {
+			preLoaderRoute: typeof LayoutVesselsVesselIdImport;
+			parentRoute: typeof LayoutImport;
+		};
+		"/_layout/vessels/": {
+			preLoaderRoute: typeof LayoutVesselsIndexImport;
+			parentRoute: typeof LayoutImport;
+		};
+	}
 }
 
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  LayoutRoute.addChildren([
-    LayoutIndexRoute,
-    LayoutVesselsVesselIdRoute,
-    LayoutVesselsIndexRoute,
-  ]),
-  LoginRoute,
-  SignupRoute,
-])
+	LayoutRoute.addChildren([
+		LayoutIndexRoute,
+		LayoutVesselsVesselIdRoute,
+		LayoutVesselsIndexRoute,
+	]),
+	LoginRoute,
+	SignupRoute,
+]);
 
 /* prettier-ignore-end */

@@ -1,30 +1,24 @@
-import React, { useMemo, useCallback } from "react";
-import {
-  Switch,
-  Box,
-  SimpleGrid,
-  Card,
-  CardBody,
-  Text,
-} from "@chakra-ui/react";
-import { VesselPublic } from "../../client";
+import { Box, Card, CardBody, SimpleGrid, Switch, Text } from "@chakra-ui/react"
+import type React from "react"
+import { useCallback, useMemo } from "react"
+import type { VesselPublic } from "../../client"
 
 interface ValvesListProps {
-  valves: VesselPublic["valves"];
-  onToggleValve: (identifier: string, isOpen: boolean) => Promise<void>;
+  valves: VesselPublic["valves"]
+  onToggleValve: (identifier: string, isOpen: boolean) => Promise<void>
 }
 
 export const ValvesList = ({ valves, onToggleValve }: ValvesListProps) => {
   const sortedValves = useMemo(() => {
-    return [...valves].sort((a, b) => a.identifier.localeCompare(b.identifier));
-  }, [valves]);
+    return [...valves].sort((a, b) => a.identifier.localeCompare(b.identifier))
+  }, [valves])
 
   const handleToggle = useCallback(
     (identifier: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      onToggleValve(identifier, e.target.checked);
+      onToggleValve(identifier, e.target.checked)
     },
-    [onToggleValve]
-  );
+    [onToggleValve],
+  )
 
   return (
     <Box w="full">
@@ -48,5 +42,5 @@ export const ValvesList = ({ valves, onToggleValve }: ValvesListProps) => {
         ))}
       </SimpleGrid>
     </Box>
-  );
-};
+  )
+}

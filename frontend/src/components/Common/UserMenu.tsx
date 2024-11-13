@@ -7,7 +7,7 @@ import {
   MenuList,
 } from "@chakra-ui/react"
 import { FaUserAstronaut } from "react-icons/fa"
-import { FiLogOut  } from "react-icons/fi"
+import { FiLogOut } from "react-icons/fi"
 
 import useAuth from "../../hooks/useAuth"
 

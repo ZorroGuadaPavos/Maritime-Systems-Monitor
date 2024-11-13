@@ -1,6 +1,13 @@
-import { useMemo } from "react";
-import { Select, Box, Flex, FormControl, FormLabel, FormHelperText } from "@chakra-ui/react";
-import { EquipmentCategory } from "./EquipmentCategory";
+import {
+  Box,
+  Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Select,
+} from "@chakra-ui/react"
+import { useMemo } from "react"
+import { EquipmentCategory } from "./EquipmentCategory"
 
 export const EQUIPMENT_CATEGORIES = {
   Pipes: (id: string) => id.startsWith("PI"),
@@ -8,13 +15,13 @@ export const EQUIPMENT_CATEGORIES = {
   Pumps: (id: string) => id.startsWith("PU"),
   Sea: (id: string) =>
     !id.startsWith("PI") && !id.startsWith("TA") && !id.startsWith("PU"),
-} as const;
+} as const
 
 interface EquipmentSelectProps {
-  equipmentIdentifiers: string[];
-  selectedEquipment: string | null;
-  connectedEquipment: string[];
-  onEquipmentSelect: (value: string) => void;
+  equipmentIdentifiers: string[]
+  selectedEquipment: string | null
+  connectedEquipment: string[]
+  onEquipmentSelect: (value: string) => void
 }
 
 export const EquipmentSelect = ({
@@ -23,22 +30,22 @@ export const EquipmentSelect = ({
   connectedEquipment,
   onEquipmentSelect,
 }: EquipmentSelectProps) => {
-
   const equipmentCategories = useMemo(() => {
     return Object.entries(EQUIPMENT_CATEGORIES).map(([category, filterFn]) => ({
       category,
       identifiers: connectedEquipment
         .filter(filterFn)
         .sort((a, b) => a.localeCompare(b)),
-    }));
-  }, [connectedEquipment]);
+    }))
+  }, [connectedEquipment])
 
   return (
     <Box w="full">
       <FormControl>
         <FormLabel>Select Equipment Identifier</FormLabel>
         <FormHelperText>
-          Select an identifier to view all connected equipment based on the valves.
+          Select an identifier to view all connected equipment based on the
+          valves.
         </FormHelperText>
         <Select
           placeholder="--"
@@ -63,5 +70,5 @@ export const EquipmentSelect = ({
         ))}
       </Flex>
     </Box>
-  );
-};
+  )
+}

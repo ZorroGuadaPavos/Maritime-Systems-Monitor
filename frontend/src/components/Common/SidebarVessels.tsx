@@ -1,11 +1,10 @@
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
 import { Link } from "@tanstack/react-router"
-import { FiAnchor , FiHome } from "react-icons/fi"
-
+import { FiAnchor, FiHome } from "react-icons/fi"
 
 const vessels = [
   { icon: FiHome, title: "Dashboard", path: "/" },
-  { icon: FiAnchor , title: "Vessels", path: "/vessels" },
+  { icon: FiAnchor, title: "Vessels", path: "/vessels" },
 ]
 
 interface SidebarVesselsProps {
@@ -15,7 +14,6 @@ interface SidebarVesselsProps {
 const SidebarVessels = ({ onClose }: SidebarVesselsProps) => {
   const textColor = useColorModeValue("ui.main", "ui.light")
   const bgActive = useColorModeValue("#E2E8F0", "#4A5568")
-
 
   const listVessels = vessels.map(({ icon, title, path }) => (
     <Flex

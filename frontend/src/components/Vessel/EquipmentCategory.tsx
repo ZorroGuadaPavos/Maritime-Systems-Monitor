@@ -1,8 +1,8 @@
-import { Box, Text, Divider, Wrap } from "@chakra-ui/react";
+import { Box, Divider, Text, Wrap } from "@chakra-ui/react"
 
 interface EquipmentCategoryProps {
-  category: string;
-  identifiers: string[];
+  category: string
+  identifiers: string[]
 }
 
 export const EquipmentCategory = ({
@@ -22,4 +22,4 @@ export const EquipmentCategory = ({
       ))}
     </Wrap>
   </Box>
-);
+)

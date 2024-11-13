@@ -20,7 +20,6 @@ import type { UserPublic } from "../../client"
 import useAuth from "../../hooks/useAuth"
 import SidebarVessels from "./SidebarVessels"
 
-
 const Sidebar = () => {
   const queryClient = useQueryClient()
   const bgColor = useColorModeValue("ui.light", "ui.dark")

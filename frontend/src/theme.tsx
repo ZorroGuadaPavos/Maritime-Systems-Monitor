@@ -1,4 +1,4 @@
-import { extendTheme, ThemeConfig } from "@chakra-ui/react"
+import { type ThemeConfig, extendTheme } from "@chakra-ui/react"
 
 const disabledStyles = {
   _disabled: {
