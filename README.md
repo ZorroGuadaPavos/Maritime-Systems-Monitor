@@ -1,9 +1,16 @@
 # Vessel Connections
 
-## Challenge
-[Read the challenge details](./challenge.md)
+## Overview
+A web application for monitoring and simulating vessel ballasting systems. The system allows users to visualize and analyze connections between various marine vessel components (tanks, pumps, valves, pipes, and sea inlets/outlets) through an interactive interface.
 
-## Technology Stack and Features
+## Features
+- Interactive valve control system
+- Real-time connection analysis between vessel components
+- Multi-user support for independent system interaction
+- Dynamic vessel model generation from configuration files
+- Visual representation of equipment connections
+
+## Technology Stack
 
 - **Backend:**
     - [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
